@@ -40,11 +40,13 @@ def write(name, header, rows, colspec):
 
 
 def factor_summary():
+    # only months that have a return to predict, so counts match the other tables
+    last_month = pd.read_csv(f"{OUT_DIR}/long_short_returns.csv", index_col=0, parse_dates=True).index.max()
     rows = []
     for f in FACTORS:
         path = f"{DATA_DIR}/{f}.csv" if f == "size" else f"{DATA_DIR}/{f}_winsorized.csv"
         panel = pd.read_csv(path, index_col=0, parse_dates=True)
-        valid = panel.dropna(how="all")
+        valid = panel.dropna(how="all").loc[:last_month]
         pooled = valid.stack()
         rows.append(" & ".join([NAMES[f], f"{valid.index.min():%Y-%m}", str(len(valid)),
                                 f"${valid.notna().sum(axis=1).mean():.0f}$",
@@ -97,8 +99,11 @@ def is_oos():
         rows.append(" & ".join([NAMES[f], num(i["ls_ann_ret_%"]), num(i["ls_sharpe"]), num(i["fm_mean_%"], 3),
                                 tstat(i["fm_nw_t"]), num(o["ls_ann_ret_%"]), num(o["ls_sharpe"]),
                                 num(o["fm_mean_%"], 3), tstat(o["fm_nw_t"])]))
-    write("is_oos", "& \\multicolumn{4}{c}{In-sample (2012-02 to 2020-10, 105 months)} & "
-          "\\multicolumn{4}{c}{Out-of-sample (2020-11 to 2026-09, 71 months)} \\\\\n"
+    dates = pd.read_csv(f"{OUT_DIR}/fm_slopes_multivariate.csv", index_col=0, parse_dates=True).index
+    split = dates[int(len(dates) * 0.6) - 1]  # same rule as validation_costs.py
+    span = lambda idx: f"{idx.min():%Y-%m} to {idx.max():%Y-%m}, {len(idx)} months"
+    write("is_oos", f"& \\multicolumn{{4}}{{c}}{{In-sample ({span(dates[dates <= split])})}} & "
+          f"\\multicolumn{{4}}{{c}}{{Out-of-sample ({span(dates[dates > split])})}} \\\\\n"
           "\\cmidrule(lr){2-5} \\cmidrule(lr){6-9}\n"
           "Factor & L/S ret.\\ (\\%) & Sharpe & FM $\\bar\\gamma$ (\\%) & NW $t$ "
           "& L/S ret.\\ (\\%) & Sharpe & FM $\\bar\\gamma$ (\\%) & NW $t$", rows, "lrrrrrrrr")
@@ -154,8 +159,31 @@ def information_coefficient():
           "& \\% months IC $>0$", rows, "lrrrrrr")
 
 
+def subperiods():
+    """Multivariate FM premia before vs during the 2023-2026 AI/semiconductor rally."""
+    from fama_macbeth import time_series_test
+    slopes = pd.read_csv(f"{OUT_DIR}/fm_slopes_multivariate.csv", index_col=0, parse_dates=True)
+    early, late = slopes.loc[:"2022"], slopes.loc["2023":]
+    a, b = time_series_test(early), time_series_test(late)
+    rows = [" & ".join([NAMES[f], num(a.loc[f, "mean_%"], 3), tstat(a.loc[f, "nw_t"]),
+                        num(b.loc[f, "mean_%"], 3), tstat(b.loc[f, "nw_t"])]) for f in FACTORS]
+    write("subperiods", f"& \\multicolumn{{2}}{{c}}{{{early.index.min():%Y-%m} to {early.index.max():%Y-%m} "
+          f"({len(early)} months)}} & \\multicolumn{{2}}{{c}}{{{late.index.min():%Y-%m} to "
+          f"{late.index.max():%Y-%m} ({len(late)} months)}} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5}\n"
+          "Factor & $\\bar\\gamma$ (\\%) & NW $t$ & $\\bar\\gamma$ (\\%) & NW $t$", rows, "lrrrr")
+
+
+def momentum_crashes(n=5):
+    ls = pd.read_csv(f"{OUT_DIR}/long_short_returns.csv", index_col=0, parse_dates=True)
+    vix = pd.read_csv(f"{DATA_DIR}/vix.csv", index_col=0, parse_dates=True)["vix"].resample("ME").last()
+    worst = ls["momentum"].nsmallest(n)
+    rows = [" & ".join([f"{d:%Y-%m}", num(r * 100, 1), num(vix.shift(1).loc[d], 1)]) for d, r in worst.items()]
+    write("momentum_crashes", "Month & Momentum L/S return (\\%) & VIX at prior month-end", rows, "lrr")
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
-               sector_neutral, regimes, information_coefficient]:
+               sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes]:
         fn()
     print("tables written to", TAB_DIR)

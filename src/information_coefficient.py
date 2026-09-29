@@ -13,7 +13,7 @@ sqrt(12)), Newey-West t-stat on the mean, and % of months with IC > 0.
 import numpy as np
 import pandas as pd
 
-from decile_backtest import FACTOR_FILES, MIN_STOCKS, PRICES_PATH
+from decile_backtest import FACTOR_FILES, MIN_STOCKS, PRICES_PATH, monthly_returns
 from validation_costs import nw_tstat
 
 OUT_DIR = "Project-1/output"
@@ -30,7 +30,7 @@ def monthly_ic(factor, returns):
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
-    returns = prices.resample("ME").last().pct_change(fill_method=None)
+    returns = monthly_returns(prices)
 
     ic = pd.DataFrame({k: monthly_ic(pd.read_csv(p, index_col=0, parse_dates=True), returns)
                        for k, p in FACTOR_FILES.items()})

@@ -33,6 +33,18 @@ N_DECILES = 10
 MIN_STOCKS = 100  # skip months with fewer than ~10 stocks per decile
 
 
+def monthly_returns(prices):
+    """Month-end to month-end returns. A final month whose last price is
+    before that month's last business day is incomplete (a partial-month
+    return mixed in with full months), so it is dropped."""
+    monthly_prices = prices.resample("ME").last()
+    # fill_method=None: don't forward-fill across gaps (e.g. SNDK's 2016-2025 delisting)
+    returns = monthly_prices.pct_change(fill_method=None)
+    if prices.index[-1] < prices.index[-1] + pd.offsets.BMonthEnd(0):
+        returns = returns.iloc[:-1]
+    return returns
+
+
 def assign_deciles(factor):
     """Per-month (row-wise) percentile rank -> decile label 1..10."""
     pct_rank = factor.rank(axis=1, pct=True)
@@ -50,9 +62,7 @@ def long_short_weights(deciles):
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
-    monthly_prices = prices.resample("ME").last()
-    # fill_method=None: don't forward-fill across gaps (e.g. SNDK's 2016-2025 delisting)
-    returns = monthly_prices.pct_change(fill_method=None)
+    returns = monthly_returns(prices)
 
     decile_returns = {}
     long_short = {}

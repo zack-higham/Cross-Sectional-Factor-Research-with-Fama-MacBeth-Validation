@@ -28,6 +28,8 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
+from decile_backtest import monthly_returns
+
 PRICES_PATH = "Project-1/data/prices.csv"
 FACTOR_FILES = {
     "momentum": "Project-1/data/momentum_winsorized.csv",
@@ -99,8 +101,7 @@ def time_series_test(slopes):
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
-    monthly_prices = prices.resample("ME").last()
-    returns = monthly_prices.pct_change(fill_method=None)
+    returns = monthly_returns(prices)
 
     factors = {k: pd.read_csv(p, index_col=0, parse_dates=True) for k, p in FACTOR_FILES.items()}
 

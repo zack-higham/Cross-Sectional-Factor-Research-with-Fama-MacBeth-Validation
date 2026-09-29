@@ -25,7 +25,7 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 
-from decile_backtest import FACTOR_FILES, N_DECILES, PRICES_PATH, assign_deciles, long_short_weights
+from decile_backtest import FACTOR_FILES, N_DECILES, PRICES_PATH, assign_deciles, long_short_weights, monthly_returns
 from fama_macbeth import cross_sectional_regressions, time_series_test
 from validation_costs import COST_BPS, net_returns, spread_stats
 
@@ -68,8 +68,7 @@ def regime_table(series_by_name, regime):
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
-    monthly_prices = prices.resample("ME").last()
-    returns = monthly_prices.pct_change(fill_method=None)
+    returns = monthly_returns(prices)
 
     universe = pd.read_csv(UNIVERSE_PATH)
     sectors = universe.set_index("ticker")["sector"]
