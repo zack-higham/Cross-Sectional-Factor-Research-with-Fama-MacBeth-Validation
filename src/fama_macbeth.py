@@ -44,8 +44,13 @@ def newey_west_lags(n_obs):
     return int(np.floor(4 * (n_obs / 100) ** (2 / 9)))
 
 
-def cross_sectional_regressions(returns, factors):
-    """Step 1: one OLS per month. Returns slopes (T x K+1), R^2 and N per month."""
+def cross_sectional_regressions(returns, factors, sectors=None):
+    """Step 1: one OLS per month. Returns slopes (T x K+1), R^2 and N per month.
+
+    If `sectors` (ticker -> sector label) is given, sector dummies are added,
+    so each factor slope is identified only from within-sector variation.
+    Dummy coefficients are dropped from the returned slopes.
+    """
     names = list(factors)
     slopes, r2, n_obs = {}, {}, {}
 
@@ -61,8 +66,12 @@ def cross_sectional_regressions(returns, factors):
         # z-score on the regression sample so every slope is per 1 SD
         # of the stocks actually in this month's regression
         x = (month[names] - month[names].mean()) / month[names].std()
-        fit = sm.OLS(month["ret"], sm.add_constant(x)).fit()
-        slopes[date] = fit.params
+        x = sm.add_constant(x)
+        if sectors is not None:
+            dummies = pd.get_dummies(sectors.reindex(month.index), drop_first=True, dtype=float)
+            x = pd.concat([x, dummies], axis=1)
+        fit = sm.OLS(month["ret"], x).fit()
+        slopes[date] = fit.params[["const"] + names]
         r2[date] = fit.rsquared
         n_obs[date] = len(month)
 
