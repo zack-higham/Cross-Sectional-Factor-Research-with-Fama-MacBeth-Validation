@@ -38,7 +38,7 @@ def monthly_returns(prices):
     before that month's last business day is incomplete (a partial-month
     return mixed in with full months), so it is dropped."""
     monthly_prices = prices.resample("ME").last()
-    # fill_method=None: don't forward-fill across gaps (e.g. SNDK's 2016-2025 delisting)
+    # fill_method=None: never forward-fill a missing price into a fake 0% return
     returns = monthly_prices.pct_change(fill_method=None)
     if prices.index[-1] < prices.index[-1] + pd.offsets.BMonthEnd(0):
         returns = returns.iloc[:-1]

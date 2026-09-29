@@ -18,7 +18,7 @@ TRADING_DAYS_PER_YEAR = 252
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
 
-    daily_returns = prices.pct_change()
+    daily_returns = prices.pct_change(fill_method=None)  # never forward-fill a gap into a fake zero-vol stretch
     rolling_vol = daily_returns.rolling(WINDOW).std() * np.sqrt(TRADING_DAYS_PER_YEAR)
 
     monthly_vol = rolling_vol.resample("ME").last()
