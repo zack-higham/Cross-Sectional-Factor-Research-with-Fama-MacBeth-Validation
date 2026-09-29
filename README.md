@@ -22,7 +22,8 @@ costs, sector-neutral construction and a VIX regime split.
 
 The most statistically significant raw result (volatility) turned out to be compensation for
 market exposure, while momentum, the factor with the strongest prior literature, was the only
-premium robust to risk adjustment, sector neutralisation and costs. Rank ICs for both are
+premium that survived risk adjustment. It also survives sector neutralisation, and its
+break-even trading cost (56 bps per unit turnover) is well above the assumed 10 bps. Rank ICs for both are
 insignificant, meaning the predictive content sits in the tails of the cross-section rather
 than in a consistent ordering of all stocks. A universe selected on end-of-sample market cap
 explains both the negative size premium and a residual volatility premium that contradicts
