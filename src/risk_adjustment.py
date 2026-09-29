@@ -27,9 +27,9 @@ from decile_backtest import FACTOR_FILES, PRICES_PATH, monthly_returns
 from fama_macbeth import cross_sectional_regressions, time_series_test
 from validation_costs import COST_BPS, net_returns, newey_west_lags
 
-MARKET_PATH = "Project-1/data/market.csv"
-BETA_PATH = "Project-1/data/beta_winsorized.csv"
-OUT_DIR = "Project-1/output"
+MARKET_PATH = "data/market.csv"
+BETA_PATH = "data/beta_winsorized.csv"
+OUT_DIR = "output"
 FACTORS = list(FACTOR_FILES)
 
 

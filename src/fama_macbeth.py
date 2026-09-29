@@ -30,14 +30,14 @@ import statsmodels.api as sm
 
 from decile_backtest import monthly_returns
 
-PRICES_PATH = "Project-1/data/prices.csv"
+PRICES_PATH = "data/prices.csv"
 FACTOR_FILES = {
-    "momentum": "Project-1/data/momentum_winsorized.csv",
-    "reversal": "Project-1/data/reversal_winsorized.csv",
-    "volatility": "Project-1/data/volatility_winsorized.csv",
-    "size": "Project-1/data/size.csv",
+    "momentum": "data/momentum_winsorized.csv",
+    "reversal": "data/reversal_winsorized.csv",
+    "volatility": "data/volatility_winsorized.csv",
+    "size": "data/size.csv",
 }
-OUT_DIR = "Project-1/output"
+OUT_DIR = "output"
 MIN_STOCKS = 100  # same threshold as the decile backtest
 
 

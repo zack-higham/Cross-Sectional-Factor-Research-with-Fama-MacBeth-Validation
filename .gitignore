@@ -1,0 +1,9 @@
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+
+# Downloaded data and intermediate results are regenerable from src/
+data/*
+!data/.gitkeep
+output/*
+!output/.gitkeep

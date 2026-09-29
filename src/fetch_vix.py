@@ -6,7 +6,7 @@ never as a factor.
 
 import yfinance as yf
 
-OUT_PATH = "Project-1/data/vix.csv"
+OUT_PATH = "data/vix.csv"
 START_DATE = "2011-01-01"
 
 if __name__ == "__main__":

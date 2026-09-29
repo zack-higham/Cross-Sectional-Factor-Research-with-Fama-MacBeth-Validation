@@ -11,8 +11,8 @@ import time
 import pandas as pd
 import yfinance as yf
 
-CONSTITUENTS_PATH = "Project-1/data/sp500_constituents.csv"
-OUT_PATH = "Project-1/data/sp500_top200.csv"
+CONSTITUENTS_PATH = "data/sp500_constituents.csv"
+OUT_PATH = "data/sp500_top200.csv"
 TOP_N = 200
 PAUSE_SECONDS = 0.1  # small delay between requests to reduce rate-limit risk
 

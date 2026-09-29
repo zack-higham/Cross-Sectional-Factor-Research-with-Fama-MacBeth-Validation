@@ -12,8 +12,8 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-OUT_DIR = "Project-1/output"
-FIG_DIR = "Project-1/paper/figures"
+OUT_DIR = "output"
+FIG_DIR = "paper/figures"
 FACTORS = ["momentum", "reversal", "volatility", "size"]
 LABELS = {"momentum": "Momentum (12-1)", "reversal": "Reversal (1m)",
           "volatility": "Volatility (60d)", "size": "Size (log cap)"}

@@ -12,8 +12,8 @@ window - so 12-1 momentum must stop at P(t-2): months t-12 .. t-2.
 
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
-OUT_PATH = "Project-1/data/momentum.csv"
+PRICES_PATH = "data/prices.csv"
+OUT_PATH = "data/momentum.csv"
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)

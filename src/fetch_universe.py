@@ -9,7 +9,7 @@ import pandas as pd
 import requests
 
 WIKI_URL = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-OUT_PATH = "Project-1/data/sp500_constituents.csv"
+OUT_PATH = "data/sp500_constituents.csv"
 
 # Wikipedia rejects requests without a browser-like User-Agent (returns 403)
 HEADERS = {"User-Agent": "Mozilla/5.0 (research script; pandas read_html)"}

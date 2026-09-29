@@ -9,9 +9,9 @@ import pandas as pd
 
 from validation_costs import spread_stats
 
-OUT_DIR = "Project-1/output"
-DATA_DIR = "Project-1/data"
-TAB_DIR = "Project-1/paper/tables"
+OUT_DIR = "output"
+DATA_DIR = "data"
+TAB_DIR = "paper/tables"
 FACTORS = ["momentum", "reversal", "volatility", "size"]
 NAMES = {"momentum": "Momentum", "reversal": "Reversal", "volatility": "Volatility", "size": "Size"}
 

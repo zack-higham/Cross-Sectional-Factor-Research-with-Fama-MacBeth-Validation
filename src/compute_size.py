@@ -10,9 +10,9 @@ mega-cap would otherwise dominate a regression on raw dollar values).
 import numpy as np
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
-UNIVERSE_PATH = "Project-1/data/sp500_top200.csv"
-OUT_PATH = "Project-1/data/size.csv"
+PRICES_PATH = "data/prices.csv"
+UNIVERSE_PATH = "data/sp500_top200.csv"
+OUT_PATH = "data/size.csv"
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)

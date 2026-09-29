@@ -9,8 +9,8 @@ actual investment performance. Daily granularity is needed for the
 import pandas as pd
 import yfinance as yf
 
-UNIVERSE_PATH = "Project-1/data/sp500_top200.csv"
-OUT_PATH = "Project-1/data/prices.csv"
+UNIVERSE_PATH = "data/sp500_top200.csv"
+OUT_PATH = "data/prices.csv"
 START_DATE = "2011-01-01"
 
 

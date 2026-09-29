@@ -29,9 +29,9 @@ from decile_backtest import FACTOR_FILES, N_DECILES, PRICES_PATH, assign_deciles
 from fama_macbeth import cross_sectional_regressions, time_series_test
 from validation_costs import COST_BPS, net_returns, spread_stats
 
-UNIVERSE_PATH = "Project-1/data/sp500_top200.csv"
-VIX_PATH = "Project-1/data/vix.csv"
-OUT_DIR = "Project-1/output"
+UNIVERSE_PATH = "data/sp500_top200.csv"
+VIX_PATH = "data/vix.csv"
+OUT_DIR = "output"
 REGIMES = ["low", "mid", "high"]
 
 

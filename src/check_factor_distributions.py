@@ -9,10 +9,10 @@ recurring pattern - before deciding how aggressively to winsorize.
 import pandas as pd
 
 FACTOR_FILES = {
-    "momentum": "Project-1/data/momentum.csv",
-    "reversal": "Project-1/data/reversal.csv",
-    "volatility": "Project-1/data/volatility.csv",
-    "size": "Project-1/data/size.csv",
+    "momentum": "data/momentum.csv",
+    "reversal": "data/reversal.csv",
+    "volatility": "data/volatility.csv",
+    "size": "data/size.csv",
 }
 
 if __name__ == "__main__":

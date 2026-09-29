@@ -15,10 +15,10 @@ confirmed by the full-panel check showing no outliers there.
 import pandas as pd
 
 FACTOR_FILES = {
-    "momentum": "Project-1/data/momentum.csv",
-    "reversal": "Project-1/data/reversal.csv",
-    "volatility": "Project-1/data/volatility.csv",
-    "beta": "Project-1/data/beta.csv",  # risk control, same treatment as the factors
+    "momentum": "data/momentum.csv",
+    "reversal": "data/reversal.csv",
+    "volatility": "data/volatility.csv",
+    "beta": "data/beta.csv",  # risk control, same treatment as the factors
 }
 LOWER_PCT = 0.01
 UPPER_PCT = 0.99

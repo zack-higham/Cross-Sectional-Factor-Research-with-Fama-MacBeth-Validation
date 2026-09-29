@@ -16,7 +16,7 @@ import pandas as pd
 from decile_backtest import FACTOR_FILES, MIN_STOCKS, PRICES_PATH, monthly_returns
 from validation_costs import nw_tstat
 
-OUT_DIR = "Project-1/output"
+OUT_DIR = "output"
 
 
 def monthly_ic(factor, returns):

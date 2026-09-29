@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 import statsmodels.api as sm
 
-OUT_DIR = "Project-1/output"
+OUT_DIR = "output"
 IS_FRACTION = 0.6
 COST_BPS = 10
 SENSITIVITY_BPS = [0, 5, 10, 20]

@@ -11,9 +11,9 @@ whether a factor spread is anything more than exposure to the market.
 
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
-MARKET_PATH = "Project-1/data/market.csv"
-OUT_PATH = "Project-1/data/beta.csv"
+PRICES_PATH = "data/prices.csv"
+MARKET_PATH = "data/market.csv"
+OUT_PATH = "data/beta.csv"
 WINDOW = 252
 
 if __name__ == "__main__":

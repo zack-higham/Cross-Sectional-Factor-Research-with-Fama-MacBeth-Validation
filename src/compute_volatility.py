@@ -10,8 +10,8 @@ predict.
 import numpy as np
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
-OUT_PATH = "Project-1/data/volatility.csv"
+PRICES_PATH = "data/prices.csv"
+OUT_PATH = "data/volatility.csv"
 WINDOW = 60
 TRADING_DAYS_PER_YEAR = 252
 

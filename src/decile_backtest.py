@@ -21,14 +21,14 @@ $1 short, which is what Stage 5's 10bps cost multiplies.
 import numpy as np
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
+PRICES_PATH = "data/prices.csv"
 FACTOR_FILES = {
-    "momentum": "Project-1/data/momentum_winsorized.csv",
-    "reversal": "Project-1/data/reversal_winsorized.csv",
-    "volatility": "Project-1/data/volatility_winsorized.csv",
-    "size": "Project-1/data/size.csv",
+    "momentum": "data/momentum_winsorized.csv",
+    "reversal": "data/reversal_winsorized.csv",
+    "volatility": "data/volatility_winsorized.csv",
+    "size": "data/size.csv",
 }
-OUT_DIR = "Project-1/output"
+OUT_DIR = "output"
 N_DECILES = 10
 MIN_STOCKS = 100  # skip months with fewer than ~10 stocks per decile
 

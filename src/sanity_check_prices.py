@@ -7,7 +7,7 @@ momentum/volatility calculations later with no error raised.
 
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
+PRICES_PATH = "data/prices.csv"
 EXTREME_MOVE_THRESHOLD = 0.5  # 50% single-day move
 
 if __name__ == "__main__":

@@ -9,7 +9,7 @@ it does not share the universe's survivorship bias.
 import pandas as pd
 import yfinance as yf
 
-OUT_PATH = "Project-1/data/market.csv"
+OUT_PATH = "data/market.csv"
 START_DATE = "2010-01-01"  # one extra year so trailing 252-day betas exist from early 2011
 
 if __name__ == "__main__":

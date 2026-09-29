@@ -6,8 +6,8 @@ built from adjacent, non-overlapping slices of the same price history.
 
 import pandas as pd
 
-PRICES_PATH = "Project-1/data/prices.csv"
-OUT_PATH = "Project-1/data/reversal.csv"
+PRICES_PATH = "data/prices.csv"
+OUT_PATH = "data/reversal.csv"
 
 if __name__ == "__main__":
     prices = pd.read_csv(PRICES_PATH, index_col=0, parse_dates=True)
