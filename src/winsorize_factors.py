@@ -6,6 +6,8 @@ too high (e.g. SNDK during a sector rally) and ones that are
 artificially too low (e.g. VRT's pre-merger SPAC-shell period, where
 near-zero volatility reflects a dormant shell, not real trading).
 
+Beta (the market-risk control) gets the same treatment.
+
 Size is excluded - the log transform already fixed its scale problem,
 confirmed by the full-panel check showing no outliers there.
 """
@@ -16,6 +18,7 @@ FACTOR_FILES = {
     "momentum": "Project-1/data/momentum.csv",
     "reversal": "Project-1/data/reversal.csv",
     "volatility": "Project-1/data/volatility.csv",
+    "beta": "Project-1/data/beta.csv",  # risk control, same treatment as the factors
 }
 LOWER_PCT = 0.01
 UPPER_PCT = 0.99

@@ -182,8 +182,37 @@ def momentum_crashes(n=5):
     write("momentum_crashes", "Month & Momentum L/S return (\\%) & VIX at prior month-end", rows, "lrr")
 
 
+def capm_alphas():
+    a = pd.read_csv(f"{OUT_DIR}/capm_alphas.csv", index_col=[0, 1])
+    cell = lambda spec, f: num(a.loc[(spec, f), "alpha_ann_%"]) + " " + tstat(a.loc[(spec, f), "alpha_nw_t"])
+    rows = [" & ".join([NAMES[f], num(a.loc[("gross", f), "beta"]), tstat(a.loc[("gross", f), "beta_nw_t"]),
+                        cell("gross", f), cell("net", f), cell("sector_neutral", f),
+                        cell("pre_2023", f), cell("from_2023", f)]) for f in FACTORS]
+    write("capm_alphas", "& \\multicolumn{2}{c}{Market beta} & \\multicolumn{5}{c}{CAPM alpha (\\%/yr), NW $t$} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-8}\n"
+          "Factor & $\\beta$ & NW $t$ & Gross & Net & Sector-neutral & 2012 to 2022 & 2023 to 2026", rows, "lrrrrrrr")
+
+
+def fm_risk():
+    fm = load("fm_summary_with_beta.csv")
+    s = pd.read_csv(f"{OUT_DIR}/fm_slope_alphas.csv", index_col=[0, 1, 2])
+    cell = lambda spec, per, f: (num(s.loc[(spec, per, f), "alpha_ann_%"]) + " " + tstat(s.loc[(spec, per, f), "alpha_nw_t"])
+                                 if (spec, per, f) in s.index else "")
+    names = dict(NAMES, beta="Beta")
+    rows = [" & ".join([names[f], num(fm.loc[f, "mean_%"], 3), tstat(fm.loc[f, "nw_t"]),
+                        cell("four_factor", "full", f), cell("four_factor", "pre_2023", f),
+                        cell("with_beta", "full", f), cell("with_beta", "pre_2023", f)])
+            for f in FACTORS + ["beta"]]
+    write("fm_risk", "& \\multicolumn{2}{c}{FM with beta control} & \\multicolumn{4}{c}{Market-adjusted slope alpha (\\%/yr), NW $t$} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-7}\n"
+          "& & & \\multicolumn{2}{c}{Four-factor model} & \\multicolumn{2}{c}{With beta control} \\\\\n"
+          "\\cmidrule(lr){4-5} \\cmidrule(lr){6-7}\n"
+          "Factor & $\\bar\\gamma$ (\\%) & NW $t$ & Full & 2012 to 2022 & Full & 2012 to 2022", rows, "lrrrrrr")
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
-               sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes]:
+               sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
+               capm_alphas, fm_risk]:
         fn()
     print("tables written to", TAB_DIR)
