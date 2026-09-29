@@ -2,6 +2,12 @@
 Stage 2a: 12-1 momentum factor. For each stock, each month, the
 cumulative return over the 12-month window ending 1 month ago -
 skipping the most recent month to avoid mixing in short-term reversal.
+
+Timing convention shared by every factor file: row t only uses prices
+up to the end of month t-1 (it is the signal known at the start of
+month t, used to predict month t's return). Under that convention the
+most recent completed month is P(t-1)/P(t-2) - that's reversal's
+window - so 12-1 momentum must stop at P(t-2): months t-12 .. t-2.
 """
 
 import pandas as pd
@@ -15,7 +21,7 @@ if __name__ == "__main__":
     monthly_prices = prices.resample("ME").last()
     print(f"Resampled to {len(monthly_prices)} month-end rows")
 
-    momentum = monthly_prices.shift(1) / monthly_prices.shift(13) - 1
+    momentum = monthly_prices.shift(2) / monthly_prices.shift(13) - 1
     momentum.to_csv(OUT_PATH)
 
     non_null_counts = momentum.notna().sum(axis=1)
