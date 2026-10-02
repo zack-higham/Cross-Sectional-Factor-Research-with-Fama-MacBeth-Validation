@@ -20,7 +20,10 @@ def num(x, dp=2):
     """Math-mode number so minus signs typeset correctly."""
     if pd.isna(x):
         return "n/a"
-    return f"${x:.{dp}f}$"
+    s = f"{x:.{dp}f}"
+    if float(s) == 0:
+        s = s.lstrip("-")  # no "-0.00"
+    return f"${s}$"
 
 
 def tstat(x):
@@ -210,9 +213,29 @@ def fm_risk():
           "Factor & $\\bar\\gamma$ (\\%) & NW $t$ & Full & 2012 to 2022 & Full & 2012 to 2022", rows, "lrrrrrr")
 
 
+def ym(x):
+    return "not recovered" if pd.isna(x) else f"{pd.Timestamp(x):%Y-%m}"
+
+
+def drawdowns():
+    d = pd.read_csv(f"{OUT_DIR}/drawdowns.csv", index_col=[0, 1, 2])
+    rows = []
+    for construction, label in [("raw", "Raw"), ("sector_neutral", "Sector-neutral")]:
+        rows.append(f"\\multicolumn{{9}}{{l}}{{\\textit{{{label}}}}}")
+        for f in FACTORS:
+            g, n = d.loc[(construction, "gross", f)], d.loc[(construction, "net", f)]
+            rows.append(" & ".join([NAMES[f], num(float(g["ann_ret_%"])), num(float(g["mdd_%"]), 1),
+                                    ym(g["peak"]), ym(g["trough"]), ym(g["recovery"]),
+                                    num(float(g["calmar"])), num(float(n["mdd_%"]), 1), num(float(n["calmar"]))]))
+    write("drawdowns", "& \\multicolumn{6}{c}{Gross} & \\multicolumn{2}{c}{Net of 10 bps} \\\\\n"
+          "\\cmidrule(lr){2-7} \\cmidrule(lr){8-9}\n"
+          "Factor & Ann.\\ ret.\\ (\\%) & Max DD (\\%) & Peak & Trough & Recovery & Calmar & Max DD (\\%) & Calmar",
+          rows, "lrrcccrrr")
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
                sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
-               capm_alphas, fm_risk]:
+               capm_alphas, fm_risk, drawdowns]:
         fn()
     print("tables written to", TAB_DIR)
