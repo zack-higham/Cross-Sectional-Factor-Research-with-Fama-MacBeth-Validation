@@ -72,7 +72,7 @@ ALIASES = {
     "GOOG": [("GOOGL", None)],         # class C of Alphabet; file lists class A from 2010
 }
 # Linde plc succeeded Praxair in the index on the October 2018 merger, but the
-# file has a six-day gap (PX last listed 2018-10-30, LIN first 2018-11-06).
+# file has a six-day gap (PX absent from the list dated 2018-10-31, LIN first listed 2018-11-06).
 BRIDGES = {"LIN": ("2018-10-31", "2018-11-05")}
 
 

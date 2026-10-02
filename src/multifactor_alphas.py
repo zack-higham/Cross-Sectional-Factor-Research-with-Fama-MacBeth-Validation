@@ -76,6 +76,8 @@ if __name__ == "__main__":
           f"{both.index.max():%Y-%m}, corr {corr:.4f} (one-month misaligned: {lagged:.4f}); "
           f"mean {both.mean().iloc[0] * 1200:.2f} vs {both.mean().iloc[1] * 1200:.2f} %/yr")
     assert corr > MIN_ALIGNMENT_CORR, "factor months are misaligned"
+    pd.Series({"months": len(both), "corr": corr, "corr_misaligned_1m": lagged,
+               "french_end": f"{ff.index.max():%Y-%m}"}).to_csv(f"{OUT_DIR}/french_alignment.csv")
     print(f"French data end {ff.index.max():%Y-%m}; long-short data end {ls.index.max():%Y-%m}")
 
     net = net_returns(ls, to, COST_BPS)
