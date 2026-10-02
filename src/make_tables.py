@@ -298,9 +298,26 @@ def point_in_time():
     write("pit_counts", "Year & " + " & ".join(str(y) for y in years), rows, "l" + "r" * len(years))
 
 
+def raw_factors():
+    c = pd.read_csv(f"{OUT_DIR}/raw_factor_comparison.csv", index_col=[0, 1])
+    rows = []
+    for f in FACTORS:
+        w, r = c.loc[("winsorised", f)], c.loc[("raw", f)]
+        rows.append(" & ".join([NAMES[f], num(w["ls_ann_ret_%"]), num(r["ls_ann_ret_%"]),
+                                num(w["fm_mean_%"], 3) + " " + tstat(w["fm_nw_t"]),
+                                num(r["fm_mean_%"], 3) + " " + tstat(r["fm_nw_t"]),
+                                num(w["fm_mktadj_alpha_%"]) + " " + tstat(w["fm_mktadj_t"]),
+                                num(r["fm_mktadj_alpha_%"]) + " " + tstat(r["fm_mktadj_t"])]))
+    write("raw_factors", "& \\multicolumn{2}{c}{L/S ann.\\ return (\\%)} & \\multicolumn{2}{c}{FM $\\bar\\gamma$ (\\%/mo), NW $t$} "
+          "& \\multicolumn{2}{c}{Market-adjusted (\\%/yr), NW $t$} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5} \\cmidrule(lr){6-7}\n"
+          "Factor & Winsorised & Raw & Winsorised & Raw & Winsorised & Raw", rows, "lrrrrrr")
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
                sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
-               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings, point_in_time]:
+               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings, point_in_time,
+               raw_factors]:
         fn()
     print("tables written to", TAB_DIR)
