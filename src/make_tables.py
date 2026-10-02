@@ -233,9 +233,43 @@ def drawdowns():
           rows, "lrrcccrrr")
 
 
+MF_MODELS = ["CAPM", "FF3", "Carhart", "FF5+UMD"]
+MF_FACTORS = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "UMD"]
+
+
+def multifactor_alphas():
+    m = pd.read_csv(f"{OUT_DIR}/multifactor_alphas.csv", index_col=[0, 1, 2])
+    cell = lambda s, mod, per: num(m.loc[(s, mod, per), "alpha_ann_%"]) + " " + tstat(m.loc[(s, mod, per), "alpha_nw_t"])
+    rows = []
+    panels = [("gross", "Panel A: long-short portfolios, gross (\\%/yr)"),
+              ("net", "Panel B: long-short portfolios, net of 10 bps (\\%/yr)"),
+              ("fm", "Panel C: multivariate Fama-MacBeth slopes (\\%/yr per 1 SD)")]
+    for suffix, title in panels:
+        rows.append(f"\\multicolumn{{7}}{{l}}{{\\textit{{{title}}}}}")
+        for f in FACTORS:
+            s = f"{f}_{suffix}"
+            rows.append(" & ".join([NAMES[f]] + [cell(s, mod, "full") for mod in MF_MODELS]
+                                   + [cell(s, "FF5+UMD", "pre_2023"), cell(s, "FF5+UMD", "from_2023")]))
+    write("multifactor_alphas", "& \\multicolumn{4}{c}{Full sample} & \\multicolumn{2}{c}{FF5+UMD by period} \\\\\n"
+          "\\cmidrule(lr){2-5} \\cmidrule(lr){6-7}\n"
+          "Series & CAPM & FF3 & Carhart & FF5+UMD & 2012 to 2022 & 2023 to 2026", rows, "lrrrrrr")
+
+
+def multifactor_loadings():
+    m = pd.read_csv(f"{OUT_DIR}/multifactor_alphas.csv", index_col=[0, 1, 2])
+    rows = []
+    for suffix, title in [("gross", "Long-short portfolios, gross"), ("fm", "Fama-MacBeth slopes")]:
+        rows.append(f"\\multicolumn{{8}}{{l}}{{\\textit{{{title}}}}}")
+        for f in FACTORS:
+            r = m.loc[(f"{f}_{suffix}", "FF5+UMD", "full")]
+            rows.append(" & ".join([NAMES[f]] + [num(r[f"b_{k}"]) + " " + tstat(r[f"t_{k}"]) for k in MF_FACTORS]
+                                   + [num(r["r2"])]))
+    write("multifactor_loadings", "Series & " + " & ".join(MF_FACTORS) + " & $R^2$", rows, "lrrrrrrr")
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
                sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
-               capm_alphas, fm_risk, drawdowns]:
+               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings]:
         fn()
     print("tables written to", TAB_DIR)
