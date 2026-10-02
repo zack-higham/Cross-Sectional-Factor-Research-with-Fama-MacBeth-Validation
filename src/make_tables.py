@@ -267,9 +267,40 @@ def multifactor_loadings():
     write("multifactor_loadings", "Series & " + " & ".join(MF_FACTORS) + " & $R^2$", rows, "lrrrrrrr")
 
 
+def point_in_time():
+    c = pd.read_csv(f"{OUT_DIR}/pit_comparison.csv", index_col=[0, 1])
+    pair = lambda f, col, dp=2: [num(c.loc[("main", f), col], dp), num(c.loc[("pit", f), col], dp)]
+    cell = lambda u, f, m, t: num(c.loc[(u, f), m]) + " " + tstat(c.loc[(u, f), t])
+    rows = ["\\multicolumn{7}{l}{\\textit{Panel A: decile long-short portfolios, gross}}",
+            "& \\multicolumn{2}{c}{Ann.\\ return (\\%)} & \\multicolumn{2}{c}{Sharpe} & \\multicolumn{2}{c}{NW $t$}",
+            "& Main & PIT & Main & PIT & Main & PIT", "\\midrule"]
+    rows += [" & ".join([NAMES[f]] + pair(f, "ls_ann_ret_%") + pair(f, "ls_sharpe") + pair(f, "ls_nw_t"))
+             for f in FACTORS]
+    rows += ["\\midrule",
+             "\\multicolumn{7}{l}{\\textit{Panel B: Fama-MacBeth premia; $\\bar\\gamma$ in \\%/mo, alphas in \\%/yr per 1 SD (NW $t$)}}",
+             "& \\multicolumn{2}{c}{Four-factor $\\bar\\gamma$} & \\multicolumn{2}{c}{Four-factor, market-adjusted} "
+             "& \\multicolumn{2}{c}{Beta control, market-adjusted}",
+             "& Main & PIT & Main & PIT & Main & PIT", "\\midrule"]
+    rows += [" & ".join([NAMES[f]] + [num(c.loc[(u, f), "fm4_mean_%"], 3) + " " + tstat(c.loc[(u, f), "fm4_nw_t"]) for u in ("main", "pit")]
+                        + [cell(u, f, "fm4_mktadj_alpha_%", "fm4_mktadj_t") for u in ("main", "pit")]
+                        + [cell(u, f, "fmb_mktadj_alpha_%", "fmb_mktadj_t") for u in ("main", "pit")])
+             for f in FACTORS]
+    lines = ["\\begin{tabular}{lrrrrrr}", "\\toprule"] + [r if r == "\\midrule" else r + " \\\\" for r in rows]
+    lines += ["\\bottomrule", "\\end{tabular}"]
+    with open(f"{TAB_DIR}/point_in_time.tex", "w", encoding="utf-8") as fh:
+        fh.write("\n".join(lines) + "\n")
+
+    n = pd.read_csv(f"{OUT_DIR}/pit_counts.csv", index_col=0, parse_dates=True)
+    yearly = n.groupby(n.index.year).mean()
+    years = [y for y in yearly.index if y % 2 == 0]
+    rows = [" & ".join([label] + [f"${yearly.loc[y, col]:.0f}$" for y in years])
+            for label, col in [("Main universe", "main_common"), ("Point-in-time", "pit_common")]]
+    write("pit_counts", "Year & " + " & ".join(str(y) for y in years), rows, "l" + "r" * len(years))
+
+
 if __name__ == "__main__":
     for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
                sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
-               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings]:
+               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings, point_in_time]:
         fn()
     print("tables written to", TAB_DIR)
