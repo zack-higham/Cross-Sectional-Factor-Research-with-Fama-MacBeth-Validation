@@ -1,17 +1,19 @@
 # Cross-Sectional Factor Research with Fama-MacBeth Validation
 
-**Among the 200 largest S&P 500 stocks (2011 to 2026), 12-1 momentum is the only premium that survives
-market, multi-factor and point-in-time checks (market-adjusted Fama-MacBeth t = 3.41; 2.26 under point-in-time
-membership), and it is the standard momentum factor. The strongest raw result, volatility, is market beta under
-the CAPM, and its multi-factor alpha has the signature of survivorship bias; size and reversal are not findings.**
+**Among the 200 largest S&P 500 stocks (2011 to 2026), 12-1 momentum is the only positive premium that remains
+significant both once market exposure is removed and under point-in-time index membership (market-adjusted
+Fama-MacBeth t = 3.41; 2.26 point-in-time, where the unadjusted premium is no longer significant). It is the standard momentum factor (UMD
+loading t = 8.83), not a separate source of return. The strongest raw result, volatility, is market beta under the
+CAPM, and its multi-factor alpha has the signature of survivorship bias. Size and reversal are not findings.**
 
 - **One-page summary:** [SUMMARY.pdf](SUMMARY.pdf)
 - **Full paper (23 pages):** [paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf](paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf) (LaTeX source: [`paper/main.tex`](paper/main.tex))
 
 ![Fama-MacBeth t-statistic of each factor across specifications](paper/figures/robustness_summary.png)
 
-*Fama-MacBeth t-statistic of each factor across specifications. Momentum is the only positive premium
-significant in every specification; size is significantly negative throughout because of survivorship bias.*
+*Fama-MacBeth t-statistic of each factor across specifications. Momentum is significant in every specification
+except the unadjusted premium under point-in-time membership (t = 1.76); size is significantly negative throughout
+because of survivorship bias.*
 
 ---
 
@@ -19,7 +21,7 @@ significant in every specification; size is significantly negative throughout be
 
 | Factor | Raw | After risk adjustment and robustness checks | Verdict |
 |---|---|---|---|
-| **Momentum (12-1)** | FM premium 0.30%/mo per SD, NW t = 2.91 | Market-adjusted 3.7%/yr, t = 3.41 (2.49 before 2023; 2.26 point-in-time; 3.64 unwinsorised). Loads on UMD (t = 8.83); decile portfolio max drawdown -56.3% (2016 to 2023) | Robust, and it is the known momentum factor |
+| **Momentum (12-1)** | FM premium 0.30%/mo per SD, NW t = 2.91 | Market-adjusted 3.7%/yr, t = 3.41 (2.49 before 2023; 2.26 point-in-time; 3.64 unwinsorised). Loads on UMD (t = 8.83); decile portfolio max drawdown -56.3% (2016 to 2023) | Survives market adjustment; is the UMD factor; weaker point-in-time (raw FM t = 1.76, decile t = 0.41) |
 | **Volatility (60d)** | FM premium 0.49%/mo, t = 3.07 | Beta 1.17, CAPM alpha insignificant; FF5+UMD alpha 15.95%/yr from loading on unprofitable, high-investment winners; residual premium insignificant point-in-time (t = 1.79) | Not a usable premium |
 | **Reversal (1m)** | Insignificant (t = 0.51) | Turnover 3.44/month, break-even cost 9.7 bps | Eliminated by costs |
 | **Size (log cap)** | Big-minus-small -21.26%/yr | Alpha survives SMB; shrinks 25.4% point-in-time | Survivorship bias, not a size effect |

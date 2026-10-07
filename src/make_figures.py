@@ -145,11 +145,12 @@ def robustness_summary():
         ("Market-adjusted", lambda f: sa.loc[("four_factor", "full", f), "alpha_nw_t"]),
         ("Market-adjusted, 2012-2022", lambda f: sa.loc[("four_factor", "pre_2023", f), "alpha_nw_t"]),
         ("FF5 + UMD alpha", lambda f: mf.loc[(f"{f}_fm", "FF5+UMD", "full"), "alpha_nw_t"]),
+        ("Point-in-time, raw premium", lambda f: pit.loc[("pit", f), "fm4_nw_t"]),
         ("Point-in-time, market-adj.", lambda f: pit.loc[("pit", f), "fm4_mktadj_t"]),
         ("Unwinsorised, market-adj.", lambda f: raw.loc[("raw", f), "fm_mktadj_t"]),
     ]
     y = np.arange(len(specs))[::-1]
-    fig, axes = plt.subplots(1, 4, figsize=(7.2, 2.6), sharey=True, sharex=True)
+    fig, axes = plt.subplots(1, 4, figsize=(7.2, 2.85), sharey=True, sharex=True)
     for ax, f in zip(axes, FACTORS):
         t = [fn(f) for _, fn in specs]
         ax.axvspan(-1.96, 1.96, color=GRID, alpha=0.6, lw=0)

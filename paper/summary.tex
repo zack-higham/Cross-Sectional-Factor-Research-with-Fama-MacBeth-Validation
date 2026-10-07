@@ -33,14 +33,14 @@ Do four standard characteristics (12-1 momentum, one-month reversal, 60-day vola
 
 \head{Findings}
 \begin{enumerate}
-\item \textbf{Momentum is the one robust premium, and it is the standard momentum factor.} Market-adjusted Fama-MacBeth premium 3.7\% a year per standard deviation ($t = 3.41$; $t = 2.49$ before 2023), significant under point-in-time membership ($t = 2.26$) and without winsorisation ($t = 3.64$). It loads heavily on UMD ($t = 8.83$), and its alpha beyond UMD before 2023 is insignificant ($t = 1.01$). The decile portfolio lost 56.3\% from January 2016 to May 2023.
+\item \textbf{Momentum is the only positive premium significant both after market adjustment and point-in-time, and it is the standard momentum factor.} Market-adjusted Fama-MacBeth premium 3.7\% a year per standard deviation ($t = 3.41$; $t = 2.49$ before 2023). Under point-in-time membership the market-adjusted premium stays significant ($t = 2.26$), but the unadjusted premium ($t = 1.76$) and the decile spread ($t = 0.41$) do not. It loads heavily on UMD ($t = 8.83$), and its decile portfolio's Carhart alpha is $-1.48\%$ a year, so it is not a separate source of return. The decile portfolio lost 56.3\% from January 2016 to May 2023.
 \item \textbf{The volatility premium is not a usable premium.} Raw Fama-MacBeth $t = 3.07$, but the long-short portfolio has a market beta of 1.17 and an insignificant CAPM alpha ($-3.13\%$ a year before 2023). Its FF5+UMD alpha of 15.95\% a year ($t = 3.51$) comes from loading on unprofitable, heavily investing firms ($-1.75$ on RMW) that nonetheless won: the signature of ex post selection. The residual volatility premium loses significance under point-in-time membership ($t = 3.05$ to $1.79$).
 \item \textbf{Size and reversal are not findings.} The big-minus-small spread ($-21.26\%$ a year) is survivorship bias from an end-of-sample universe; the point-in-time filter shrinks it by 25.4\%, a partial confirmation under the pre-set rule. Reversal's turnover (3.44 a month) puts its break-even cost at 9.7 bps, so it does not survive costs.
 \end{enumerate}
 
 \begin{center}
-\includegraphics[width=0.93\textwidth]{figures/robustness_summary.pdf}\\[-2pt]
-{\small Fama-MacBeth $t$-statistic of each factor across specifications. Momentum is the only positive premium significant in every specification; size is significantly negative throughout, which reflects survivorship bias rather than a size effect.}
+\includegraphics[width=0.86\textwidth]{figures/robustness_summary.pdf}\\[-2pt]
+{\small Fama-MacBeth $t$-statistic of each factor across specifications. Momentum is significant in every specification except the unadjusted premium under point-in-time membership ($t = 1.76$); size is significantly negative throughout, which reflects survivorship bias rather than a size effect.}
 \end{center}
 
 \head{Main limitation}
