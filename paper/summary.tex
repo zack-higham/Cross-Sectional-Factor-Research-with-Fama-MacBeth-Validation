@@ -26,21 +26,26 @@ Do four standard characteristics (12-1 momentum, one-month reversal, 60-day vola
 
 \head{Data and method}
 \begin{itemize}
-\item \textbf{Data:} daily adjusted prices from January 2011; monthly returns to August 2026 (175 months with all four factors); SPY and T-bills for the market; Fama-French five factors and UMD; historical S\&P 500 membership lists.
+\item \textbf{Data:} daily adjusted prices from January 2011; 175 months with all four factors, to August 2026; SPY and T-bills; Fama-French five factors and UMD; historical S\&P 500 membership.
 \item \textbf{Three lenses:} equal-weighted decile long-short portfolios, Fama-MacBeth regressions with Newey-West $t$-statistics, and rank information coefficients, all on one timing convention (factor at end of $t-1$, return over $t$).
-\item \textbf{Validation:} out-of-sample split, CAPM and Fama-French five-factor plus momentum alphas, 10 bps costs, drawdowns, sector neutrality, VIX regimes, a point-in-time membership filter and unwinsorised factors, the last four specified in advance and committed before being run.
+\item \textbf{Validation:} out-of-sample split, CAPM and FF5+UMD alphas, 10 bps costs, drawdowns, sector neutrality, VIX regimes, point-in-time membership and unwinsorised factors (the last four committed before being run).
 \end{itemize}
 
 \head{Findings}
 \begin{enumerate}
-\item \textbf{Momentum is the only positive premium significant both after market adjustment and point-in-time, and it is the standard momentum factor.} Market-adjusted Fama-MacBeth premium 3.7\% a year per standard deviation ($t = 3.41$; $t = 2.49$ before 2023). Under point-in-time membership the market-adjusted premium stays significant ($t = 2.26$), but the unadjusted premium ($t = 1.76$) and the decile spread ($t = 0.41$) do not. It loads heavily on UMD ($t = 8.83$), and its decile portfolio's Carhart alpha is $-1.48\%$ a year, so it is not a separate source of return. The decile portfolio lost 56.3\% from January 2016 to May 2023.
-\item \textbf{The volatility premium is not a usable premium.} Raw Fama-MacBeth $t = 3.07$, but the long-short portfolio has a market beta of 1.17 and an insignificant CAPM alpha ($-3.13\%$ a year before 2023). Its FF5+UMD alpha of 15.95\% a year ($t = 3.51$) comes from loading on unprofitable, heavily investing firms ($-1.75$ on RMW) that nonetheless won: the signature of ex post selection. The residual volatility premium loses significance under point-in-time membership ($t = 3.05$ to $1.79$).
-\item \textbf{Size and reversal are not findings.} The big-minus-small spread ($-21.26\%$ a year) is survivorship bias from an end-of-sample universe; the point-in-time filter shrinks it by 25.4\%, a partial confirmation under the pre-set rule. Reversal's turnover (3.44 a month) puts its break-even cost at 9.7 bps, so it does not survive costs.
+\item \textbf{Momentum: the only positive premium significant after market adjustment and point-in-time.} Market-adjusted Fama-MacBeth premium 3.7\% a year per standard deviation ($t = 3.41$; $t = 2.49$ before 2023). Under point-in-time membership the market-adjusted premium stays significant ($t = 2.26$), but the unadjusted premium ($t = 1.76$) and the decile spread ($t = 0.41$) do not. It loads heavily on UMD ($t = 8.83$), and its decile portfolio's Carhart alpha is $-1.48\%$ a year, so it is not a separate source of return. The decile portfolio lost 56.3\% from January 2016 to May 2023.
+\item \textbf{Reversal is eliminated by costs.} Its raw premium is insignificant (Fama-MacBeth $t = 0.51$), and its turnover (3.44 a month) puts its break-even cost at 9.7 bps, below realistic trading costs.
+\end{enumerate}
+
+\head{Diagnosed artefacts of the sample}
+\begin{enumerate}[resume]
+\item \textbf{Volatility: market beta under the CAPM, selection under FF5+UMD.} Raw Fama-MacBeth $t = 3.07$, but the long-short portfolio has a market beta of 1.17 and an insignificant CAPM alpha ($-3.13\%$ a year before 2023). Its FF5+UMD alpha of 15.95\% a year ($t = 3.51$) comes from unprofitable, heavily investing firms that nonetheless won: the signature of ex post selection. The residual volatility premium loses significance under point-in-time membership ($t = 3.05$ to $1.79$).
+\item \textbf{Size: survivorship bias, not a size effect.} The big-minus-small spread ($-21.26\%$ a year) comes from an end-of-sample universe; the point-in-time filter shrinks it by 25.4\%, a partial confirmation under the pre-set rule.
 \end{enumerate}
 
 \begin{center}
-\includegraphics[width=0.86\textwidth]{figures/robustness_summary.pdf}\\[-2pt]
-{\small Fama-MacBeth $t$-statistic of each factor across specifications. Momentum is significant in every specification except the unadjusted premium under point-in-time membership ($t = 1.76$); size is significantly negative throughout, which reflects survivorship bias rather than a size effect.}
+\includegraphics[width=0.8\textwidth]{figures/robustness_summary.pdf}\\[-2pt]
+{\small Fama-MacBeth $t$-statistics across specifications. Momentum is significant in all but the unadjusted point-in-time premium ($t = 1.76$); size is significantly negative throughout (survivorship bias).}
 \end{center}
 
 \head{Main limitation}

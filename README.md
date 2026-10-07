@@ -19,11 +19,19 @@ because of survivorship bias.*
 
 ## Key findings
 
+**Findings**
+
 | Factor | Raw | After risk adjustment and robustness checks | Verdict |
 |---|---|---|---|
 | **Momentum (12-1)** | FM premium 0.30%/mo per SD, NW t = 2.91 | Market-adjusted 3.7%/yr, t = 3.41 (2.49 before 2023; 2.26 point-in-time; 3.64 unwinsorised). Loads on UMD (t = 8.83); decile portfolio max drawdown -56.3% (2016 to 2023) | Survives market adjustment; is the UMD factor; weaker point-in-time (raw FM t = 1.76, decile t = 0.41) |
-| **Volatility (60d)** | FM premium 0.49%/mo, t = 3.07 | Beta 1.17, CAPM alpha insignificant; FF5+UMD alpha 15.95%/yr from loading on unprofitable, high-investment winners; residual premium insignificant point-in-time (t = 1.79) | Not a usable premium |
 | **Reversal (1m)** | Insignificant (t = 0.51) | Turnover 3.44/month, break-even cost 9.7 bps | Eliminated by costs |
+
+**Diagnosed artefacts of the sample** (reported for completeness; they reflect how the universe was built,
+not premia)
+
+| Factor | Raw | After risk adjustment and robustness checks | Verdict |
+|---|---|---|---|
+| **Volatility (60d)** | FM premium 0.49%/mo, t = 3.07 | Beta 1.17, CAPM alpha insignificant; FF5+UMD alpha 15.95%/yr from loading on unprofitable, high-investment winners; residual premium insignificant point-in-time (t = 1.79) | Market beta under the CAPM; selection under FF5+UMD |
 | **Size (log cap)** | Big-minus-small -21.26%/yr | Alpha survives SMB; shrinks 25.4% point-in-time | Survivorship bias, not a size effect |
 
 ## Method
