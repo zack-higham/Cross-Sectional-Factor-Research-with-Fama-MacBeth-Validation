@@ -16,7 +16,7 @@ OUT_DIR = "output"
 FIG_DIR = "paper/figures"
 FACTORS = ["momentum", "reversal", "volatility", "size"]
 LABELS = {"momentum": "Momentum (12-1)", "reversal": "Reversal (1m)",
-          "volatility": "Volatility (60d)", "size": "Size (log cap)"}
+          "volatility": "Total vol. (60d)", "size": "Size (log cap)"}
 # categorical slots in fixed order (validated palette), one per factor
 COLORS = dict(zip(FACTORS, ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]))
 INK, MUTED, GRID = "#1f1f1e", "#6b6a64", "#e4e3de"

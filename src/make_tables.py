@@ -13,7 +13,7 @@ OUT_DIR = "output"
 DATA_DIR = "data"
 TAB_DIR = "paper/tables"
 FACTORS = ["momentum", "reversal", "volatility", "size"]
-NAMES = {"momentum": "Momentum", "reversal": "Reversal", "volatility": "Volatility", "size": "Size"}
+NAMES = {"momentum": "Momentum", "reversal": "Reversal", "volatility": "Total volatility", "size": "Size"}
 
 
 def num(x, dp=2):

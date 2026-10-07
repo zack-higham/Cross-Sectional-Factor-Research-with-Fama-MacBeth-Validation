@@ -31,7 +31,7 @@ not premia)
 
 | Factor | Raw | After risk adjustment and robustness checks | Verdict |
 |---|---|---|---|
-| **Volatility (60d)** | FM premium 0.49%/mo, t = 3.07 | Beta 1.17, CAPM alpha insignificant; FF5+UMD alpha 15.95%/yr from loading on unprofitable, high-investment winners; residual premium insignificant point-in-time (t = 1.79) | Market beta under the CAPM; selection under FF5+UMD |
+| **Total volatility (60d)** | FM premium 0.49%/mo, t = 3.07 | Beta 1.17, CAPM alpha insignificant; FF5+UMD alpha 15.95%/yr from loading on unprofitable, high-investment winners; residual premium insignificant point-in-time (t = 1.79) | Market beta under the CAPM; selection under FF5+UMD |
 | **Size (log cap)** | Big-minus-small -21.26%/yr | Alpha survives SMB; shrinks 25.4% point-in-time | Survivorship bias, not a size effect |
 
 ## Method
