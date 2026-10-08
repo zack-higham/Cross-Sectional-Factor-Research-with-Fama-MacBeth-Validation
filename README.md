@@ -7,7 +7,7 @@ loading t = 8.83), not a separate source of return. The strongest raw result, vo
 CAPM, and its multi-factor alpha has the signature of survivorship bias. Size and reversal are not findings.**
 
 - **One-page summary:** [SUMMARY.pdf](SUMMARY.pdf)
-- **Full paper (18 pages):** [paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf](paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf) (LaTeX source: [`paper/main.tex`](paper/main.tex))
+- **Full paper (17 pages):** [paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf](paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf) (LaTeX source: [`paper/main.tex`](paper/main.tex))
 
 ![Fama-MacBeth t-statistic of each factor across specifications](paper/figures/robustness_summary.png)
 
