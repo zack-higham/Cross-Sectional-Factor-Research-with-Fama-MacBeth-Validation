@@ -4,18 +4,22 @@
 \usepackage[utf8]{inputenc}
 \usepackage{lmodern}
 \usepackage{microtype}
-\usepackage[margin=2.5cm]{geometry}
+\usepackage[margin=2.3cm]{geometry}
 \usepackage{amsmath,amssymb}
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{caption}
 \usepackage{float}
+\usepackage[section]{placeins}
 \usepackage{setspace}
 \usepackage[authoryear,round]{natbib}
 \usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue]{hyperref}
 
+\makeatletter
+\setlength{\@fptop}{0pt}   % float-only pages start at the top
+\makeatother
 \captionsetup{font=small,labelfont=bf}
-\setstretch{1.12}
+\setstretch{1.06}
 \newcommand{\tabfit}[1]{\resizebox{\textwidth}{!}{\input{#1}}}
 
 \title{\textbf{Momentum, Reversal, Volatility and Size in U.S.\ Large Caps:\\
@@ -29,7 +33,7 @@ A Cross-Sectional Factor Study with Fama-MacBeth Validation, 2011 to 2026}}
 
 \begin{abstract}
 \noindent
-This paper tests whether four stock characteristics (12-1 momentum, one-month short-term reversal, 60-day total realised volatility and log market capitalisation) predict the cross-section of monthly returns among the 200 largest current S\&P 500 constituents from 2011 to 2026. Each factor is evaluated through three complementary lenses: equal-weighted decile portfolio sorts, Fama-MacBeth cross-sectional regressions with Newey-West standard errors, and monthly rank information coefficients. The analysis is then stress-tested with a 60/40 in-sample and out-of-sample split, market and multi-factor risk adjustment, transaction costs, drawdowns, sector-neutral construction, a VIX regime split, a point-in-time index membership filter and non-winsorised factors. In the joint Fama-MacBeth regression, momentum and volatility carry positive raw premia of 0.30\% and 0.49\% per month per cross-sectional standard deviation (Newey-West $t$ of 2.91 and 3.07), but risk adjustment separates them sharply. Against the market alone, the volatility long-short portfolio has a beta of 1.17 and a CAPM alpha that is insignificant over the full sample and negative before 2023. Against the Fama-French five factors plus momentum it instead shows a large alpha (15.95\% a year, $t = 3.51$), because its high-volatility stocks are unprofitable, aggressively investing firms that nonetheless earned high returns: the profile of firms selected ex post by an end-of-sample universe. Momentum is close to market-neutral, and its market-adjusted Fama-MacBeth premium of 3.7\% a year per standard deviation is significant ($t = 3.41$; $t = 2.49$ before 2023). It loads heavily on the standard momentum factor, so it is that factor rather than a separate source of return. When the universe is restricted to point-in-time index members its market-adjusted premium stays significant ($t = 2.26$), but its unadjusted premium does not ($t = 1.76$), and its decile portfolio suffered a 56.3\% drawdown from 2016 to 2023. The point-in-time filter removes the significance of a residual volatility premium that contradicts the literature and shrinks the strongly negative size premium by a quarter, supporting the attribution of both to survivorship bias in a universe selected on end-of-sample market capitalisation. Short-term reversal is indistinguishable from zero after costs. The contribution is methodological rather than a claim of a tradable edge: a transparent, reproducible pipeline that separates what the data support from what market exposure and sample construction manufacture.
+This paper tests whether four stock characteristics (12-1 momentum, one-month short-term reversal, 60-day total realised volatility and log market capitalisation) predict next-month returns among the 200 largest current S\&P 500 constituents from February 2012 to August 2026, using equal-weighted decile sorts, Fama-MacBeth regressions with Newey-West standard errors and rank information coefficients. Momentum and volatility carry significant raw Fama-MacBeth premia ($t = 2.91$ and $3.07$), but risk adjustment separates them. The volatility long-short portfolio has a market beta of 1.17 and an insignificant CAPM alpha; its large Fama-French five-factor-plus-momentum alpha (15.95\% a year) comes from unprofitable, heavily investing firms that nonetheless earned high returns, the profile of firms selected ex post by an end-of-sample universe. Momentum is close to market-neutral: its market-adjusted premium of 3.7\% a year per standard deviation ($t = 3.41$) stays significant before 2023 and under point-in-time index membership ($t = 2.26$), although its unadjusted point-in-time premium does not ($t = 1.76$). It is the standard momentum factor rather than a separate source of return, and its decile portfolio lost 56.3\% from 2016 to 2023. A point-in-time filter removes the significance of a residual volatility premium and shrinks the negative size premium by a quarter, supporting a survivorship explanation for both. Short-term reversal does not survive costs.
 \end{abstract}
 
 \section{Introduction}
@@ -38,9 +42,9 @@ Cross-sectional factor research asks a simple question: do stocks that share a m
 
 \textbf{Momentum.} \citet{jegadeesh1993} document that stocks with high returns over the prior three to twelve months continue to outperform. The standard 12-1 construction skips the most recent month to separate momentum from short-term reversal \citep{carhart1997}. \citet{daniel2016} show that momentum is prone to sharp crashes when markets rebound after a decline.
 
-\textbf{Short-term reversal.} \citet{jegadeesh1990} and \citet{lehmann1990} find that short-horizon winners (over the prior month and prior week respectively) tend to underperform subsequently, an effect usually attributed to liquidity provision and microstructure, and concentrated in smaller, less liquid stocks.
+\textbf{Short-term reversal.} \citet{jegadeesh1990} and \citet{lehmann1990} find that short-horizon winners tend to underperform subsequently, an effect usually attributed to liquidity provision and concentrated in smaller, less liquid stocks.
 
-\textbf{Volatility.} The volatility factor in this paper is total realised volatility over 60 trading days, which mixes market-related and stock-specific variation. \citet{ang2006} report that stocks with high idiosyncratic volatility relative to the \citet{fama1993} three-factor model earn very low subsequent returns, and they document the same pattern for portfolios sorted on total volatility, with no control for systematic risk. Idiosyncratic volatility relative to a factor model is not constructed here. \citet{baker2011} and \citet{frazzini2014} relate the broader low-risk anomaly, which concerns total volatility and beta as well as idiosyncratic risk, to leverage constraints and benchmarking. A positive volatility premium would therefore contradict the classic anomaly and requires explanation.
+\textbf{Volatility.} The volatility factor in this paper is total realised volatility over 60 trading days, which mixes market-related and stock-specific variation. \citet{ang2006} report that stocks with high idiosyncratic volatility earn very low subsequent returns, and document the same pattern for total volatility; idiosyncratic volatility relative to a factor model is not constructed here. \citet{baker2011} and \citet{frazzini2014} relate the broader low-risk anomaly to leverage constraints and benchmarking. A positive volatility premium would therefore contradict the classic anomaly and requires explanation.
 
 \textbf{Size.} \citet{banz1981} and \citet{fama1992} find that small firms earn higher average returns. Here size mainly serves as a control variable, and Section~\ref{sec:limitations} explains why its estimated premium in this universe cannot be interpreted at face value.
 
@@ -53,15 +57,15 @@ Four robustness extensions (drawdowns, multi-factor alphas, the point-in-time me
 
 \textbf{Universe.} The universe is the 200 largest constituents of the S\&P 500 by market capitalisation as of September 2026, taken from the current Wikipedia constituent list with GICS sector labels, and ranked using Yahoo Finance market capitalisations (from \$58.6 billion to \$5.17 trillion). The universe spans all 11 GICS sectors, from 39 Information Technology stocks to 5 Utilities. Because membership is fixed at the end of the sample, the universe is survivorship-biased by construction; the consequences are quantified in Section~\ref{sec:limitations}.
 
-\textbf{Prices.} Daily dividend- and split-adjusted closing prices were downloaded from Yahoo Finance for 3,949 trading days from 3 January 2011 to 16 September 2026. Month-end prices are the last available close in each month. Because the price series ends mid-month, the incomplete September 2026 return is excluded, so the return sample ends in August 2026. Nineteen of the 200 stocks have less than 90\% daily coverage because they listed or were spun off during the sample (for example AbbVie, Hewlett Packard Enterprise and Vertiv). A stock enters a factor only once it has enough history, so these late entrants account for 1,806 missing momentum observations, 5.2\% of the momentum stock-month panel.
+\textbf{Prices.} Daily dividend- and split-adjusted closing prices were downloaded from Yahoo Finance for 3,949 trading days from 3 January 2011 to 16 September 2026. Month-end prices are the last available close in each month. Because the price series ends mid-month, the incomplete September 2026 return is excluded, so the return sample ends in August 2026; the sample in which all four factors are available runs from February 2012 to August 2026 (175 months). Nineteen of the 200 stocks have less than 90\% daily coverage because they listed or were spun off during the sample (for example AbbVie and Vertiv). A stock enters a factor only once it has enough history, so these late entrants account for 1,806 missing momentum observations, 5.2\% of the momentum stock-month panel.
 
-\textbf{Market data.} The market benchmark is the SPDR S\&P 500 ETF (SPY), using dividend-adjusted prices as a total-return proxy, and the risk-free rate is the 13-week U.S.\ Treasury bill yield, both from Yahoo Finance. SPY holds the index constituents as they were at each point in time, so unlike an average of this paper's universe it is free of the universe's survivorship bias. The CBOE VIX index is used for the regime analysis.
+\textbf{Market data.} The market benchmark is the SPDR S\&P 500 ETF (SPY), using dividend-adjusted prices as a total-return proxy, and the risk-free rate is the 13-week U.S.\ Treasury bill yield, both from Yahoo Finance. SPY holds the index constituents as they were at each point in time, so unlike an average of this paper's universe it is free of the universe's survivorship bias.
 
-\textbf{Factor and membership data.} Monthly returns on the Fama-French five factors and the momentum factor (UMD) were downloaded from the Kenneth French Data Library on 2 October 2026; they are built from the full CRSP universe and run to August 2026, the last month of the return sample. Historical S\&P 500 membership comes from the dated constituent lists of the open-source \texttt{fja05680/sp500} repository (pinned to one commit, with lists to 18 August 2026). These lists record the ticker in use on each date, so eleven companies that changed symbol during the sample (for example Facebook to Meta and United Technologies to RTX) and one share class (Alphabet class C) are linked to their earlier symbols by an explicit, date-bounded mapping, built by auditing every stock whose membership began after its price history.
+\textbf{Factor and membership data.} Monthly returns on the Fama-French five factors and the momentum factor (UMD) were downloaded from the Kenneth French Data Library on 2 October 2026; they are built from the full CRSP universe and run to August 2026. Historical S\&P 500 membership comes from the dated constituent lists of the open-source \texttt{fja05680/sp500} repository (pinned to one commit, with lists to 18 August 2026). These lists record the ticker in use on each date, so eleven companies that changed symbol during the sample (for example Facebook to Meta) and one share class (Alphabet class C) are linked to their earlier symbols by an explicit, date-bounded mapping, built by auditing every stock whose membership began after its price history.
 
-\textbf{Data validation.} Before any factor was built, the price panel was checked for empty series, internal gaps and single-day moves above 50\%. No series has internal gaps. Seven extreme daily moves were identified and six were verified against real events (for example the March 2020 oil price collapse and biotech trial readouts); none was treated as an error. Table~\ref{tab:factor_summary} summarises the resulting factor panels.
+\textbf{Data validation.} Before any factor was built, the price panel was checked for empty series, internal gaps and single-day moves above 50\%. No series has internal gaps. Seven extreme daily moves were identified and six were verified against real events (for example the March 2020 oil price collapse); none was treated as an error. Table~\ref{tab:factor_summary} summarises the resulting factor panels.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Factor panels. Pooled statistics across all stock-months after winsorisation (size is not winsorised). Momentum and reversal are simple returns, volatility is 60-day total realised volatility, annualised, size is the natural log of market capitalisation in U.S.\ dollars.}
 \label{tab:factor_summary}
@@ -130,13 +134,11 @@ The information coefficient (IC) for factor $k$ in month $t$ is the Spearman ran
 
 \subsection{Validation design}
 
-\textbf{Out-of-sample split.} The 175-month sample in which all four factors are available (February 2012 to August 2026) is split at one calendar date for every factor: the first 60\% (105 months, to October 2020) is in-sample and the remaining 70 months are out-of-sample. Because no parameter is estimated in-sample (all factor definitions are fixed in advance from the literature), the split tests the stability of the premia over time rather than overfitting in the usual sense.
+\textbf{Out-of-sample split.} The 175-month sample is split at one calendar date for every factor: the first 60\% (105 months, to October 2020) is in-sample and the remaining 70 months are out-of-sample. Because no parameter is estimated in-sample (all factor definitions are fixed in advance from the literature), the split tests the stability of the premia over time rather than overfitting in the usual sense.
 
 \textbf{Transaction costs.} Net returns deduct $c \cdot \text{TO}_t$ each month with $c = 10$ basis points per unit of turnover, and the first month is charged the full initial build ($\text{TO} = 2$). Sensitivity to $c \in \{0, 5, 10, 20\}$ basis points and the break-even cost $\bar R^{\text{gross}} / \overline{\text{TO}}$ are reported.
 
-\textbf{Sector neutrality.} Several sectors contain too few stocks for deciles within each sector (the smallest has five), so each stock's factor value is first converted to a percentile rank within its GICS sector and deciles are then formed on the pooled within-sector ranks. Each decile then holds approximately the universe's sector mix. The regression counterpart adds sector dummy variables, so that slopes are identified only from differences between stocks in the same sector.
-
-\textbf{VIX regimes.} Each month $t$ is classified by the VIX close at the end of month $t-1$, split into terciles over the full sample (cut-offs 14.8 and 18.2; 58, 59 and 58 months). Because the cut-offs use the whole sample, this is a descriptive conditioning analysis, not a tradable timing rule. Differences between high- and low-VIX months are tested with Welch's unequal-variance $t$-test.
+\textbf{Sector neutrality.} A sector-neutral version ranks each stock within its GICS sector before forming deciles, and adds sector dummies to the regressions (Section~\ref{sec:sector}).
 
 \section{Results}
 \label{sec:results}
@@ -145,9 +147,9 @@ The size results in this section are reported for completeness; Section~\ref{sec
 
 \subsection{Decile portfolios}
 
-Table~\ref{tab:decile_means} and Figure~\ref{fig:deciles} show mean monthly returns by decile. The volatility sort is close to monotonic, with decile 10 earning 3.13\% per month against 1.20\% for decile 1. The momentum and reversal sorts are U-shaped rather than monotonic: both extreme deciles outperform the middle of the distribution. This pattern reflects a nonlinear relationship between the factors: stocks with extreme past returns, whether winners or losers, tend to be high-volatility stocks (average volatility is 0.36 in both momentum decile 1 and decile 10, against about 0.24 in deciles 4 to 7), so the extreme momentum and reversal deciles partly inherit the volatility effect. The average cross-sectional rank correlation between momentum and volatility is close to zero, because a U-shaped relationship is invisible to a linear correlation measure.
+Table~\ref{tab:decile_means} and Figure~\ref{fig:deciles} show mean monthly returns by decile. The volatility sort is close to monotonic, with decile 10 earning 3.13\% per month against 1.20\% for decile 1. The momentum and reversal sorts are U-shaped: both extreme deciles outperform the middle of the distribution. Stocks with extreme past returns, whether winners or losers, tend to be high-volatility stocks (average volatility is 0.36 in both momentum decile 1 and decile 10, against about 0.24 in deciles 4 to 7), so the extreme momentum and reversal deciles partly inherit the volatility effect. A linear rank correlation between momentum and volatility is close to zero, because it cannot see a U-shaped relationship.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Mean monthly return (\%) of equal-weighted decile portfolios. D1 holds the lowest factor values, D10 the highest.}
 \label{tab:decile_means}
@@ -155,16 +157,16 @@ Table~\ref{tab:decile_means} and Figure~\ref{fig:deciles} show mean monthly retu
 \tabfit{tables/decile_means}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/decile_returns.pdf}
 \caption{Mean monthly return by decile. Volatility is close to monotonic; momentum and reversal are U-shaped; size falls from D1 to D9.}
 \label{fig:deciles}
 \end{figure}
 
-Table~\ref{tab:decile_spreads} reports the long-short spreads. Only volatility (Newey-West $t = 2.83$) and size ($t = -4.92$) are significant. The momentum spread earns 7.31\% a year gross with a Sharpe ratio of 0.29 and is not significant ($t = 1.18$); the U-shape means the short leg of losers performs well and erodes the spread. Figure~\ref{fig:cumulative} shows the cumulative performance of each spread.
+Table~\ref{tab:decile_spreads} reports the long-short spreads. Only volatility (Newey-West $t = 2.83$) and size ($t = -4.92$) are significant. The momentum spread earns 7.31\% a year gross with a Sharpe ratio of 0.29 and is not significant ($t = 1.18$): the short leg of losers performs well and erodes the spread. Figure~\ref{fig:cumulative} shows the cumulative performance of each spread.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Decile 10 minus decile 1 long-short portfolios, gross of costs. Newey-West $t$-statistic on the mean monthly return with 4 lags. Turnover is the mean monthly $\text{TO}_t$ (maximum 4).}
 \label{tab:decile_spreads}
@@ -172,7 +174,7 @@ Table~\ref{tab:decile_spreads} reports the long-short spreads. Only volatility (
 \tabfit{tables/decile_spreads}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/cumulative_long_short.pdf}
 \caption{Growth of \$1 in each long-short portfolio (gross, log scale). The dashed line marks the start of the out-of-sample period (November 2020).}
@@ -183,9 +185,9 @@ Table~\ref{tab:decile_spreads} reports the long-short spreads. Only volatility (
 
 Table~\ref{tab:fm} reports the regression results. In the multivariate specification, momentum earns 0.30\% per month per standard deviation ($t = 2.91$) and volatility 0.49\% ($t = 3.07$); reversal is insignificant ($t = 0.51$) and size is negative ($t = -3.85$). The monthly regressions explain on average 14.5\% of cross-sectional return variation across an average of 189 stocks.
 
-Three features of the table deserve comment. First, momentum is significant in the regression but not in the decile sort. The regression uses every stock with a linear weight, while the sort uses only the two extreme deciles, where the U-shape works against the spread. Second, the momentum premium barely changes between the univariate and multivariate specifications (0.285\% and 0.296\%); its $t$-statistic rises because the other factors absorb cross-sectional noise and reduce the variance of the monthly slopes. Controlling for volatility linearly does not remove the nonlinear overlap seen in the decile sorts. Third, Newey-West and plain $t$-statistics are similar, which indicates only modest autocorrelation in the monthly slopes. Figure~\ref{fig:fm} plots the slopes over time.
+Three features of the table deserve comment. First, momentum is significant in the regression but not in the decile sort: the regression uses every stock with a linear weight, while the sort uses only the two extreme deciles, where the U-shape works against the spread. Second, the momentum premium barely changes between the univariate and multivariate specifications (0.285\% and 0.296\%); its $t$-statistic rises because the other factors absorb cross-sectional noise. Third, Newey-West and plain $t$-statistics are similar, so the monthly slopes are only modestly autocorrelated. Figure~\ref{fig:fm} plots the slopes over time.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Fama-MacBeth regressions of monthly returns on standardised factors. $\bar\gamma$ is the mean monthly slope in \% per one cross-sectional standard deviation. Newey-West $t$-statistics (4 lags) in parentheses. Multivariate sample: 175 months, February 2012 to August 2026.}
 \label{tab:fm}
@@ -193,7 +195,7 @@ Three features of the table deserve comment. First, momentum is significant in t
 \tabfit{tables/fama_macbeth}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/fm_coefficients.pdf}
 \caption{Monthly multivariate Fama-MacBeth slopes (faint), their 12-month rolling mean (solid) with a 95\% band, and the full-sample mean (dotted). The dashed line marks the out-of-sample split.}
@@ -204,7 +206,7 @@ Three features of the table deserve comment. First, momentum is significant in t
 
 Table~\ref{tab:ic} reports rank ICs. Only size has a significant mean IC. The mean ICs for momentum (0.010) and volatility (0.028) are small and insignificant, and momentum's IC is positive in only 50.9\% of months. Figure~\ref{fig:ic} shows the IC over time.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Monthly Spearman rank information coefficients between factor values and next-month returns. Newey-West $t$ on the mean IC (4 lags).}
 \label{tab:ic}
@@ -212,7 +214,7 @@ Table~\ref{tab:ic} reports rank ICs. Only size has a significant mean IC. The me
 \input{tables/information_coefficient}
 \end{table}
 
-\begin{figure}[H]
+\begin{figure}[!htbp]
 \centering
 \includegraphics[width=\textwidth]{figures/ic_timeseries.pdf}
 \caption{Monthly rank IC (faint) and its 12-month rolling mean with a 95\% band.}
@@ -221,26 +223,18 @@ Table~\ref{tab:ic} reports rank ICs. Only size has a significant mean IC. The me
 
 \subsection{Reconciling the three lenses}
 
-The lenses answer different questions. The IC asks whether a factor orders all stocks correctly, giving each stock equal weight. The regression asks whether return is linearly related to the factor's magnitude, so extreme observations carry more weight. The decile spread asks whether the extreme deciles differ. For momentum and volatility the regression is significant while the IC is not, which means the predictive content is concentrated in the tails of the cross-section (a handful of extreme stocks) rather than spread evenly across all 200 names. Section~\ref{sec:robust} examines whether these premia are stable over time and whether they survive adjustment for market exposure.
+The lenses answer different questions. The IC asks whether a factor orders all stocks correctly, giving each stock equal weight. The regression asks whether return is linearly related to the factor's magnitude, so extreme observations carry more weight. The decile spread asks whether the extreme deciles differ. For momentum and volatility the regression is significant while the IC is not, so the predictive content is concentrated in the tails of the cross-section (a handful of extreme stocks) rather than spread evenly across all 200 names. Section~\ref{sec:robust} examines whether these premia are stable over time and whether they survive adjustment for market exposure.
 
 \section{Robustness and Validation}
 \label{sec:robust}
 
 \subsection{Out-of-sample and subperiod stability}
 
-Table~\ref{tab:is_oos} compares the two halves of the sample. Momentum's regression premium is significant in-sample ($t = 2.46$) but not out-of-sample ($t = 1.80$), and the annualised volatility of its long-short portfolio roughly doubles from 16.6\% to 33.9\%. Volatility is significant in both halves, but its long-short return rises from 12.61\% to 43.68\% a year, which is not a plausible stationary premium.
-
-\begin{table}[H]
-\centering
-\caption{In-sample and out-of-sample comparison: long-short annualised return and Sharpe ratio (gross), and multivariate Fama-MacBeth premia with Newey-West $t$-statistics.}
-\label{tab:is_oos}
-\small
-\tabfit{tables/is_oos}
-\end{table}
+In the 60/40 split, momentum's Fama-MacBeth premium is significant in-sample ($t = 2.46$) but not out-of-sample ($t = 1.80$). Volatility is significant in both halves, but its long-short return rises from 12.61\% to 43.68\% a year, which is not a plausible stationary premium.
 
 A split at the end of 2022 is more revealing (Table~\ref{tab:subperiods}). Before 2023, neither raw premium is significant at the 5\% level (momentum $t = 1.87$, volatility $t = 1.56$). From 2023 to August 2026, a period of 44 months dominated by the rally in AI, memory and semiconductor stocks, both raw premia are three to five times larger, and the volatility long-short portfolio earned 6.06\% per month against 0.64\% before 2023. Two explanations compete for this concentration: a genuine market episode, and the fact that the universe is selected on September 2026 market capitalisation, so that selection is strongest for stocks whose value rose most in the final years (SanDisk, for example, is in the universe only because of its 2025 to 2026 rise). Section~\ref{sec:risk} shows that once market exposure is removed, the picture differs sharply between the two factors.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Multivariate Fama-MacBeth premia before and during the 2023 to 2026 rally.}
 \label{tab:subperiods}
@@ -248,9 +242,9 @@ A split at the end of 2022 is more revealing (Table~\ref{tab:subperiods}). Befor
 \input{tables/subperiods}
 \end{table}
 
-Momentum's worst months (Table~\ref{tab:crashes}) include November 2020 and February 2021, both following months of elevated VIX (38.0 and 33.1). These match the rebound crashes described by \citet{daniel2016}, in which past losers rally sharply as markets recover. The worst month, July 2026, occurred at a low VIX and was a sharp reversal within the semiconductor rally itself: the winner decile, led by SanDisk, Corning, KLA, Marvell and Intel, fell 20.9\% while the loser decile rose 10.4\%.
+Momentum's worst months are listed in Table~\ref{tab:crashes}. Two of them, November 2020 and February 2021, came in the recovery from the 2020 crash, when past losers outperformed past winners: the rebound pattern described by \citet{daniel2016}. The worst month, July 2026, was a sharp reversal within the semiconductor rally itself: the winner decile, led by SanDisk, Corning, KLA, Marvell and Intel, fell 20.9\% while the loser decile rose 10.4\%.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{The five worst monthly returns of the momentum long-short portfolio.}
 \label{tab:crashes}
@@ -261,9 +255,9 @@ Momentum's worst months (Table~\ref{tab:crashes}) include November 2020 and Febr
 \subsection{Market risk adjustment}
 \label{sec:risk}
 
-Table~\ref{tab:capm} reports CAPM regressions of the long-short portfolios on the SPY excess return. The volatility spread is a leveraged market position: its beta is 1.17 ($t = 6.99$) and the regression explains 30\% of its variance. Its CAPM alpha of 8.30\% a year is not significant ($t = 1.31$) and is negative before 2023 ($-3.13\%$, $t = -0.54$); all of the remaining alpha comes from 2023 to 2026 (38.80\% a year). Over the long-run part of the sample, the high-minus-low volatility spread is therefore explained by market exposure, at least within the single-factor model (Section~\ref{sec:multifactor} shows that a multi-factor model reads it differently). Momentum behaves in the opposite way. Its beta is slightly negative over the full sample, its alpha of 8.97\% a year is earned mainly before 2023, and its raw strength after 2023 came with a beta of 0.89, because the winner decile in that period consisted largely of high-beta technology stocks. Momentum's decile alphas are only marginally significant across specifications ($t$ between 1.46 and 1.71), consistent with the noise of 20-stock deciles and the U-shape discussed in Section~\ref{sec:results}.
+Table~\ref{tab:capm} reports CAPM regressions of the long-short portfolios on the SPY excess return. The volatility spread is a leveraged market position: its beta is 1.17 ($t = 6.99$) and the regression explains 30\% of its variance. Its CAPM alpha of 8.30\% a year is not significant ($t = 1.31$) and is negative before 2023 ($-3.13\%$, $t = -0.54$); all of the remaining alpha comes from 2023 to 2026 (38.80\% a year). Over the long-run part of the sample, the high-minus-low volatility spread is therefore explained by market exposure, at least within the single-factor model (Section~\ref{sec:multifactor} shows that a multi-factor model reads it differently). Momentum behaves in the opposite way. Its beta is slightly negative over the full sample, its alpha of 8.97\% a year is earned mainly before 2023, and its raw strength after 2023 came with a beta of 0.89, because the winner decile in that period consisted largely of high-beta technology stocks. Momentum's decile alphas are only marginally significant ($t$ between 1.46 and 1.71), consistent with the noise of 20-stock deciles and the U-shape discussed in Section~\ref{sec:results}.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{CAPM regressions of long-short portfolios on the SPY excess return. Beta is from the full-sample gross regression. Alphas are annualised with Newey-West $t$-statistics (4 lags) in parentheses. Net alphas deduct 10 basis points per unit turnover.}
 \label{tab:capm}
@@ -273,7 +267,7 @@ Table~\ref{tab:capm} reports CAPM regressions of the long-short portfolios on th
 
 Table~\ref{tab:fmrisk} turns to the regressions. Adding each stock's beta as a fifth characteristic leaves the momentum and volatility premia significant ($t = 3.15$ and $3.58$), while beta itself earns nothing ($t = 0.59$). The market-adjusted slope alphas give the clearest picture. Momentum's premium is 3.68\% a year per standard deviation ($t = 3.41$), essentially unaffected by the beta control, and remains significant before 2023 ($t = 2.49$). It is the most robust result in the study and agrees with the long literature on momentum. The volatility slope, by contrast, loads heavily on the market (slope beta 0.26, $t = 6.38$ in the four-factor model); after market adjustment its premium is insignificant ($t = 1.63$) and close to zero before 2023 ($t = 0.28$).
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Fama-MacBeth regressions with trailing market beta as a control, and market-adjusted premia. The first two columns are mean monthly slopes from the five-characteristic model. The remaining columns are CAPM alphas of the monthly slope series (annualised, \% per one standard deviation), from the four-factor model of Table~\ref{tab:fm} and from the model with the beta control.}
 \label{tab:fmrisk}
@@ -281,22 +275,22 @@ Table~\ref{tab:fmrisk} turns to the regressions. Adding each stock's beta as a f
 \tabfit{tables/fm_risk}
 \end{table}
 
-One result needs particular care. Holding each stock's beta fixed and hedging the market, volatility retains a positive premium (3.59\% a year, $t = 3.05$; $t = 2.20$ before 2023), while beta's own market-adjusted premium is negative ($-4.22\%$ a year before 2023, $t = -2.62$). The negative beta premium is consistent with the betting-against-beta evidence of \citet{frazzini2014}. The positive premium on volatility in excess of beta, however, contradicts the low returns that \citet{ang2006} document for high-volatility stocks, measured either as idiosyncratic or as total volatility. The most plausible explanation is the universe selection: conditioning on membership of the 2026 top 200 favours high-variance stocks whose outcomes happened to be good, because a volatile stock is more likely than a stable one to rise far enough to be selected. This residual volatility premium is therefore treated as a symptom of survivorship bias, not as a finding; Section~\ref{sec:pit} tests that diagnosis directly.
+One result needs particular care. Holding each stock's beta fixed and hedging the market, volatility retains a positive premium (3.59\% a year, $t = 3.05$; $t = 2.20$ before 2023), while beta's own market-adjusted premium is negative ($-4.22\%$ a year before 2023, $t = -2.62$). The negative beta premium is consistent with the betting-against-beta evidence of \citet{frazzini2014}. The positive premium on volatility in excess of beta, however, contradicts the low returns that \citet{ang2006} document for high-volatility stocks. The most plausible explanation is the universe selection: conditioning on membership of the 2026 top 200 favours high-variance stocks whose outcomes happened to be good, because a volatile stock is more likely than a stable one to rise far enough to be selected. This residual volatility premium is therefore treated as a symptom of survivorship bias, not as a finding; Section~\ref{sec:pit} tests that diagnosis directly.
 
 \subsection{Multi-factor risk adjustment}
 \label{sec:multifactor}
 
-This subsection and Sections~\ref{sec:drawdowns}, \ref{sec:pit} and~\ref{sec:raw} report robustness extensions added after the original results had been seen, with specifications fixed before they were computed. Here each long-short return series and each multivariate Fama-MacBeth slope series is regressed on the same month's returns of four factor models: the CAPM with the French market factor; the three-factor model of \citet{fama1993} (market, SMB, HML); the four-factor model of \citet{carhart1997}, which adds momentum (UMD); and the five-factor model of \citet{fama2015} (adding profitability, RMW, and investment, CMA) together with UMD. The long-short return for month $t$ and the factor returns for month $t$ are earned over the same calendar month, so no lag is applied. As an alignment check, the SPY excess return used in Section~\ref{sec:risk} has a correlation of 0.995 with the French market factor (and $-0.13$ when misaligned by one month), and the French CAPM alphas in Table~\ref{tab:mf} reproduce the SPY-based alphas of Table~\ref{tab:capm} closely. Alphas are annualised with Newey-West $t$-statistics using the same lag rule. Table~\ref{tab:mfload} reports the five-factor-plus-momentum loadings.
+This subsection and Sections~\ref{sec:drawdowns}, \ref{sec:pit} and~\ref{sec:raw} report robustness extensions added after the original results had been seen, with specifications fixed before they were computed. Here each long-short return series and each multivariate Fama-MacBeth slope series is regressed on the same month's returns of the CAPM (with the French market factor) and of the five-factor model of \citet{fama2015} (market, SMB, HML, profitability RMW and investment CMA) together with the momentum factor UMD. The long-short return and the factor returns are earned over the same calendar month, so no lag is applied. As an alignment check, the SPY excess return used in Section~\ref{sec:risk} has a correlation of 0.995 with the French market factor (and $-0.13$ when misaligned by one month), and the French CAPM alphas in Table~\ref{tab:mf} reproduce the SPY-based alphas of Table~\ref{tab:capm} closely. Alphas are annualised with Newey-West $t$-statistics. Net of 10 basis points of costs, the alphas are about 1.2 to 1.3 percentage points a year lower for momentum and volatility. Table~\ref{tab:mfload} reports the FF5+UMD loadings.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
-\caption{Annualised alphas against factor models (Newey-West $t$-statistics in parentheses). French factor data run to August 2026, so every regression uses the full return sample. FF3 is \citet{fama1993}, Carhart adds UMD \citep{carhart1997}, FF5+UMD is \citet{fama2015} plus UMD.}
+\caption{Annualised alphas against the CAPM and the Fama-French five-factor model plus momentum (FF5+UMD), with Newey-West $t$-statistics in parentheses. French factor data run to August 2026, so every regression uses the full return sample.}
 \label{tab:mf}
 \small
-\tabfit{tables/multifactor_alphas}
+\input{tables/multifactor_alphas}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Factor loadings in the FF5+UMD model, full sample (Newey-West $t$-statistics in parentheses). Long-short returns are monthly decimals; Fama-MacBeth slopes are in \% per month per standard deviation.}
 \label{tab:mfload}
@@ -304,9 +298,9 @@ This subsection and Sections~\ref{sec:drawdowns}, \ref{sec:pit} and~\ref{sec:raw
 \tabfit{tables/multifactor_loadings}
 \end{table}
 
-\textbf{Momentum.} The momentum long-short portfolio loads 1.63 on UMD ($t = 12.02$, $R^2 = 0.70$), and its alpha disappears once UMD is included ($-1.48\%$ a year, $t = -0.46$, in the Carhart model; $-0.71\%$, $t = -0.24$, in FF5+UMD). The Fama-MacBeth momentum slope also loads heavily on UMD ($t = 8.83$). Its alpha beyond the factor models is 1.79\% a year ($t = 2.10$) over the full sample, but only 0.81\% ($t = 1.01$) before 2023. This is the expected result rather than a failure: 12-1 momentum in this universe is the same phenomenon as the standard momentum factor, and outside the 2023 to 2026 period there is no evidence of an additional source of return.
+\textbf{Momentum.} The momentum long-short portfolio loads 1.63 on UMD ($t = 12.02$, $R^2 = 0.70$), and its alpha disappears once UMD is included ($-1.48\%$ a year, $t = -0.46$, in the \citet{carhart1997} four-factor model; $-0.71\%$, $t = -0.24$, in FF5+UMD). The Fama-MacBeth momentum slope also loads heavily on UMD ($t = 8.83$). Its alpha beyond the factor models is 1.79\% a year ($t = 2.10$) over the full sample, but only 0.81\% ($t = 1.01$) before 2023. This is the expected result rather than a failure: 12-1 momentum in this universe is the same phenomenon as the standard momentum factor, and outside the 2023 to 2026 period there is no evidence of an additional source of return.
 
-\textbf{Volatility.} Multi-factor adjustment raises rather than lowers the volatility alpha. The long-short portfolio loads $-1.75$ on RMW ($t = -5.82$) and $-1.08$ on CMA ($t = -3.80$): its long leg consists of unprofitable firms with aggressive investment, which in the broad market earn low returns, so the model predicts far less than the portfolio earned. The FF5+UMD alpha is 15.95\% a year ($t = 3.51$), and 8.68\% ($t = 2.16$) before 2023; the Fama-MacBeth volatility slope has an alpha of 4.42\% ($t = 3.39$). \citet{fama2016} show that exposures of this kind explain the low-volatility anomaly in the full CRSP universe, whereas here they leave a large positive alpha. Taken at face value, this would be a high-volatility premium among large stocks, contrary to the literature. The more economical explanation is selection: an unprofitable, heavily investing, volatile firm is among the 200 largest in 2026 only if its bets paid off, so in this universe such firms are ex post winners. The French factors are built from the full, survivorship-free CRSP universe while the test portfolios are not, and the alpha absorbs exactly this asymmetry. The single-factor conclusion that the volatility premium is market exposure is therefore not robust to the choice of risk model, but no specification supports a tradable volatility premium; Section~\ref{sec:pit} tests the selection explanation.
+\textbf{Volatility.} Multi-factor adjustment raises rather than lowers the volatility alpha. The long-short portfolio loads $-1.75$ on RMW ($t = -5.82$) and $-1.08$ on CMA ($t = -3.80$): its long leg consists of unprofitable firms with aggressive investment, which in the broad market earn low returns, so the model predicts far less than the portfolio earned. The FF5+UMD alpha is 15.95\% a year ($t = 3.51$), and 8.68\% ($t = 2.16$) before 2023. \citet{fama2016} show that exposures of this kind explain the low-volatility anomaly in the full CRSP universe, whereas here they leave a large positive alpha. The more economical explanation is selection: an unprofitable, heavily investing, volatile firm is among the 200 largest in 2026 only if its bets paid off. The French factors are built from the full, survivorship-free CRSP universe while the test portfolios are not, and the alpha absorbs exactly this asymmetry. No specification supports a tradable volatility premium; Section~\ref{sec:pit} tests the selection explanation.
 
 \textbf{Size and reversal.} The big-minus-small spread loads $-0.61$ on SMB ($t = -4.38$), as expected, yet its alpha stays strongly negative ($-20.22\%$ a year, $t = -6.46$): the true size factor explains little of it, which is consistent with a construction artefact. Reversal is insignificant in every model.
 
@@ -314,7 +308,7 @@ This subsection and Sections~\ref{sec:drawdowns}, \ref{sec:pit} and~\ref{sec:raw
 
 Table~\ref{tab:costs} applies transaction costs. Short-term reversal replaces about 86\% of each leg every month (turnover 3.44), which at 10 basis points per unit costs 4.13\% a year, more than its 3.99\% gross return; its break-even cost is 9.7 basis points, below realistic trading costs. Momentum and volatility have much lower turnover and break-even costs of 56.0 and 193.0 basis points, so costs reduce but do not eliminate their gross results. The cost model is deliberately simple (Section~\ref{sec:limitations}); \citet{novymarx2016} show that more realistic cost models eliminate many published anomalies.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Gross and net long-short performance. Cost is 10 basis points per unit turnover, with the initial portfolio build charged in the first month. Break-even is the cost per unit turnover at which the mean net return is zero (not defined for a negative gross spread).}
 \label{tab:costs}
@@ -325,9 +319,9 @@ Table~\ref{tab:costs} applies transaction costs. Short-term reversal replaces ab
 \subsection{Drawdowns}
 \label{sec:drawdowns}
 
-Table~\ref{tab:drawdowns} reports the maximum drawdown of each long-short portfolio, measured on wealth compounded from its monthly returns, with the peak, trough and recovery months, and the Calmar ratio (annualised return divided by the absolute maximum drawdown).\footnote{Drawdowns are measured on month-end wealth, so a fall that opens and closes within a month is not captured; the figures understate drawdowns measured on daily data.} This extension was added after the original results had been seen.
+Table~\ref{tab:drawdowns} reports the maximum drawdown of each long-short portfolio, measured on wealth compounded from its monthly returns, with the peak, trough and recovery months, and the Calmar ratio (annualised return divided by the absolute maximum drawdown).\footnote{Drawdowns are measured on month-end wealth, so a fall that opens and closes within a month is not captured; the figures understate drawdowns measured on daily data.}
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Maximum drawdown (Max DD) of compounded monthly wealth and Calmar ratio (annualised arithmetic return divided by $|$Max DD$|$). Peak, trough and recovery months refer to the gross series; recovery is the first month in which wealth regains its pre-drawdown peak.}
 \label{tab:drawdowns}
@@ -335,47 +329,12 @@ Table~\ref{tab:drawdowns} reports the maximum drawdown of each long-short portfo
 \tabfit{tables/drawdowns}
 \end{table}
 
-Drawdowns are large relative to returns. The momentum portfolio lost 56.3\% between January 2016 and May 2023 and regained its peak only in April 2026; with a Calmar ratio of 0.13, its worst drawdown equals nearly eight years of its average gross return. The positive pre-2023 CAPM alpha in Table~\ref{tab:capm} should be read alongside this: much of it reflects the portfolio's negative market beta during a rising market, not steady positive returns. Volatility lost 49.1\% from February 2021 to December 2022, through the 2022 bear market, as its market beta implies, and it has the highest Calmar ratio (0.47). Size lost 97.2\% and never recovered, the compounded result of its negative mean. Costs deepen the drawdowns of the high-turnover reversal portfolio most, from 44.8\% to 65.4\%, with no recovery. Sector neutralisation reduces the gross drawdowns of momentum, volatility and size, and leaves that of reversal essentially unchanged. On this evidence none of the portfolios would be investable on a stand-alone basis at the risk implied by equal-weighted 20-stock deciles.
+Drawdowns are large relative to returns. The momentum portfolio lost 56.3\% between January 2016 and May 2023 and regained its peak only in April 2026; with a Calmar ratio of 0.13, its worst drawdown equals nearly eight years of its average gross return. The positive pre-2023 CAPM alpha in Table~\ref{tab:capm} should be read alongside this: much of it reflects the portfolio's negative market beta during a rising market, not steady positive returns. Volatility lost 49.1\% from February 2021 to December 2022, through the 2022 bear market, as its market beta implies, and it has the highest Calmar ratio (0.47). Size lost 97.2\% and never recovered, the compounded result of its negative mean. Costs deepen the drawdown of the high-turnover reversal portfolio most, from 44.8\% to 65.4\%, with no recovery. None of the portfolios would be investable on a stand-alone basis at the risk implied by equal-weighted 20-stock deciles.
 
 \subsection{Sector-neutral construction}
+\label{sec:sector}
 
-A natural concern is that the volatility and momentum spreads are disguised sector bets, since the high-volatility decile in 2023 to 2026 is dominated by technology stocks. Within-sector ranking addresses this directly: the Information Technology share of the volatility top decile after January 2023 falls from 58\% to 20\%, close to the sector's 19.5\% weight in the universe.
-
-Table~\ref{tab:sector} and Figure~\ref{fig:sector} show the results. Sector neutralisation cuts the volatility spread's return from 23.16\% to 15.92\% a year, so sector exposure explains about a third of its return, but its Sharpe ratio rises slightly (0.77 to 0.82) because sector-neutral portfolios are less volatile. The sector-dummy regressions leave all four premia close to their original values. At the level of the 11 GICS sectors, the factor effects are therefore not simply sector bets. Neutralisation at the finer sub-industry level (for example semiconductors against software) was not tested.
-
-\begin{table}[H]
-\centering
-\caption{Raw and sector-neutral (SN) factors. Long-short results are gross except ``SN net'' (10 basis points). Corr.\ is the correlation between the raw and sector-neutral long-short returns. The final two columns report multivariate Fama-MacBeth premia without and with sector dummies.}
-\label{tab:sector}
-\small
-\tabfit{tables/sector_neutral}
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{figures/sector_neutral_comparison.pdf}
-\caption{Gross Sharpe ratio of raw and sector-neutral long-short portfolios.}
-\label{fig:sector}
-\end{figure}
-
-\subsection{VIX regimes}
-
-Table~\ref{tab:regimes} and Figure~\ref{fig:regimes} condition on the prior month's VIX. The directions are consistent with prior evidence: momentum's long-short return is negative after high-VIX months ($-0.45\%$ per month against $+0.55\%$ after low-VIX months), matching the rebound-crash mechanism, while high-volatility stocks and short-term reversal perform best after high-VIX months, when markets tend to rebound. However, none of the high-minus-low differences is statistically significant (Welch $p$-values between 0.06 and 0.78), which is unsurprising with about 58 months per tercile. These results are suggestive only.
-
-\begin{table}[H]
-\centering
-\caption{Performance by tercile of the prior month-end VIX (cut-offs 14.8 and 18.2). Welch $t$-tests compare high- and low-VIX months.}
-\label{tab:regimes}
-\small
-\tabfit{tables/regimes}
-\end{table}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=\textwidth]{figures/vix_regimes.pdf}
-\caption{Mean monthly long-short return by tercile of the prior month-end VIX.}
-\label{fig:regimes}
-\end{figure}
+A natural concern is that the volatility and momentum spreads are disguised sector bets, since the high-volatility decile in 2023 to 2026 is dominated by technology stocks. Ranking within sectors addresses this directly: the Information Technology share of the volatility top decile after January 2023 falls from 58\% to 20\%, and the volatility spread falls from 23.16\% to 15.92\% a year. Fama-MacBeth premia with sector dummies stay close to the originals (momentum 0.290\%, $t = 2.64$; volatility 0.420\%, $t = 2.87$). At the level of the 11 GICS sectors the factors are therefore not simply sector bets; finer sub-industry neutralisation was not tested.
 
 \subsection{Point-in-time index membership}
 \label{sec:pit}
@@ -384,7 +343,7 @@ The size premium and the residual volatility premium have so far been attributed
 
 The filter removes each stock from the months before it joined the index, which is the main channel through which end-of-sample selection operates: Tesla, Palantir and SanDisk, for example, enter only after their index additions in December 2020, September 2024 and November 2025. It does not restore firms that left the index through acquisition, decline or delisting, because their prices are not in the panel. Prices for former constituents were deliberately not downloaded, since recycled tickers can silently attach a different company's prices. The remaining bias is therefore smaller, but not zero. Table~\ref{tab:pitcounts} shows the effect on sample size: the filtered universe averages 155 stocks a month in 2012, against 176 in the main universe, and converges to it by 2026. No month falls below the 100-stock minimum, so none is lost.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Average number of stocks per month with all four factors and a return, by year, in the main and point-in-time universes.}
 \label{tab:pitcounts}
@@ -394,7 +353,7 @@ The filter removes each stock from the months before it joined the index, which 
 
 The interpretation rule was fixed before the check was run. The size diagnosis is supported if the size spread shrinks in magnitude by at least half or its Fama-MacBeth $t$-statistic falls below 2 in absolute value, partially supported if the spread shrinks by 25\% to 50\%, and not confirmed otherwise. The residual volatility diagnosis is supported if the market-adjusted volatility premium in the beta-control model falls below $t = 2$.
 
-\begin{table}[H]
+\begin{table}[!htbp]
 \centering
 \caption{Main universe (fixed September 2026 top 200) against the point-in-time (PIT) universe (the same stocks, only while S\&P 500 members at the end of the prior month). Market-adjusted premia are CAPM alphas of the monthly Fama-MacBeth slopes, as in Table~\ref{tab:fmrisk}. Sample: 175 months, February 2012 to August 2026, for the regressions.}
 \label{tab:pit}
@@ -402,58 +361,40 @@ The interpretation rule was fixed before the check was run. The size diagnosis i
 \tabfit{tables/point_in_time}
 \end{table}
 
-Table~\ref{tab:pit} reports the results. The size spread shrinks from $-21.26\%$ to $-15.86\%$ a year, a reduction of 25.4\%, and its Fama-MacBeth premium remains significant ($t = -3.01$). Under the pre-specified rule the size diagnosis is therefore only partially supported, and only just. The large negative premium that remains is consistent with the missing exits that the filter cannot restore, but this check alone does not establish that. The residual volatility premium falls from 3.59\% a year ($t = 3.05$) to 1.94\% ($t = 1.79$) and is no longer significant, which supports the survivorship diagnosis; the volatility decile spread also falls, from 23.16\% to 17.28\% a year. Momentum is affected as well, as Section~\ref{sec:limitations} anticipated: its decile spread falls from 7.31\% to 2.43\% a year ($t = 0.41$), its unadjusted Fama-MacBeth premium from 0.296\% to 0.162\% a month ($t = 1.76$, no longer significant), and its market-adjusted premium from 3.68\% ($t = 3.41$) to 2.22\% ($t = 2.26$). The market-adjusted premium remains significant at the 5\% level, but end-of-sample selection accounts for a substantial part of momentum's full-sample strength.
+Table~\ref{tab:pit} reports the results. The size spread shrinks from $-21.26\%$ to $-15.86\%$ a year, a reduction of 25.4\%, and its Fama-MacBeth premium remains significant ($t = -3.01$). Under the pre-specified rule the size diagnosis is therefore only partially supported, and only just. The large negative premium that remains is consistent with the missing exits that the filter cannot restore, but this check alone does not establish that. The residual volatility premium falls from 3.59\% a year ($t = 3.05$) to 1.94\% ($t = 1.79$) and is no longer significant, which supports the survivorship diagnosis; the volatility decile spread also falls, from 23.16\% to 17.28\% a year. Momentum is affected as well: its decile spread falls from 7.31\% to 2.43\% a year ($t = 0.41$), its unadjusted Fama-MacBeth premium from 0.296\% to 0.162\% a month ($t = 1.76$, no longer significant), and its market-adjusted premium from 3.68\% ($t = 3.41$) to 2.22\% ($t = 2.26$). The market-adjusted premium remains significant at the 5\% level, but end-of-sample selection accounts for a substantial part of momentum's full-sample strength.
 
 \subsection{Non-winsorised factors}
 \label{sec:raw}
 
-The final extension, also added after the original results had been seen, repeats the decile sorts and the four-factor Fama-MacBeth regression with momentum, reversal and volatility left unwinsorised (Table~\ref{tab:raw}). The decile spreads are identical, because winsorisation only ties the most extreme 1\% of values at the cut-off, and those stocks remain in the extreme deciles. In the regression, momentum's premium is stronger without winsorisation, 0.332\% per month ($t = 3.29$) against 0.296\% ($t = 2.91$), and its market-adjusted premium rises to 4.10\% a year ($t = 3.64$). Volatility is slightly weaker ($t = 2.95$). Winsorisation is therefore conservative for momentum rather than flattering, and the momentum premium is not an artefact of trimming extreme values.
-
-\begin{table}[H]
-\centering
-\caption{Winsorised (main specification) against raw factor values. Long-short returns are gross; Fama-MacBeth results are from the four-factor model; market-adjusted premia are CAPM alphas of the monthly slopes (\% a year per standard deviation). Newey-West $t$-statistics in parentheses.}
-\label{tab:raw}
-\small
-\tabfit{tables/raw_factors}
-\end{table}
+The final extension repeats the decile sorts and the four-factor Fama-MacBeth regression with momentum, reversal and volatility left unwinsorised. The decile spreads are unchanged, because winsorisation only ties the most extreme 1\% of values at the cut-off and those stocks stay in the extreme deciles. Momentum's Fama-MacBeth premium is stronger without winsorisation (0.332\% per month, $t = 3.29$, against 0.296\%, $t = 2.91$), and its market-adjusted premium rises to 4.10\% a year ($t = 3.64$). Winsorisation is therefore conservative for momentum rather than flattering, and the momentum premium is not an artefact of trimming extreme values.
 
 \section{Limitations}
 \label{sec:limitations}
 
-\textbf{Survivorship bias.} The universe consists of the 200 largest S\&P 500 members at the end of the sample. A company that was small in 2012 and is in this list in 2026 must have grown enormously, so the small-cap deciles are filled with ex post winners, and companies that shrank, were acquired or failed are absent entirely. This is the most likely explanation for the strongly negative size premium ($-21.26\%$ a year for the big-minus-small spread), which is the opposite of the conventional size effect and should not be read as evidence about size. The same bias inflates the average level of returns (the multivariate intercept implies roughly 1.7\% per month) and biases any factor correlated with the chance of ending the sample large: it favours high-variance stocks, which explains the positive residual volatility premium in Section~\ref{sec:risk}, and it is strongest near the selection date, which contributes to the concentration of raw premia in 2023 to 2026. Momentum may also be affected, since past winners that kept winning are more likely to be selected. The point-in-time membership filter of Section~\ref{sec:pit} removes one channel of the bias, the presence of stocks in months before they joined the index, and confirms that selection mattered: the residual volatility premium loses significance, and the size and momentum results weaken. It cannot remove the other channel, the absence of firms that left the index, because their prices are not in the data. Only a survivorship-free database with delisting returns (for example CRSP) would remove the bias fully, and the size result in particular should not be interpreted until that is done.
+\textbf{Survivorship bias (the main limitation).} The universe is the 200 largest S\&P 500 members at the end of the sample, so a company that was small in 2012 and is in this list in 2026 must have grown enormously, and companies that shrank, were acquired or failed are absent. This is the most likely explanation for the strongly negative size premium ($-21.26\%$ a year), which should not be read as evidence about size; the same bias favours high-variance stocks and is strongest near the selection date, which contributes to the residual volatility premium and to the concentration of raw premia in 2023 to 2026. The point-in-time filter removes stocks from months before they joined the index, but it cannot restore firms that left it; only a survivorship-free database with delisting returns (for example CRSP) would remove the bias fully.
 
-\textbf{Single-episode dependence and multiple testing.} The raw significance of momentum and volatility is concentrated in the 44 months from January 2023. Momentum's market-adjusted premium survives outside that period, but at $t = 2.49$ it falls short of the $t > 3$ hurdle that \citet{harvey2016} propose given the number of factors tested in the literature; under the point-in-time filter its full-sample $t$-statistic is 2.26, and before 2023 its alpha beyond the standard factor models is insignificant. The paper also reports several specifications per factor; conclusions are therefore drawn from agreement across specifications rather than from any single $t$-statistic.
+\textbf{Single-episode dependence and multiple testing.} The raw significance of momentum and volatility is concentrated in the 44 months from January 2023. Momentum's market-adjusted premium survives outside that period, but at $t = 2.49$ it falls short of the $t > 3$ hurdle that \citet{harvey2016} propose given the number of factors tested in the literature, and under the point-in-time filter its $t$-statistic is 2.26. Conclusions are drawn from agreement across specifications rather than from any single $t$-statistic.
 
-\textbf{Risk model.} The multi-factor alphas of Section~\ref{sec:multifactor} use factors built from the full CRSP universe, which is free of survivorship bias, to explain portfolios drawn from a universe that is not. A multi-factor alpha in this setting can therefore measure the selection as much as any mispricing, as the volatility result shows, and the conclusions about volatility depend on the risk model chosen. Factor-model loadings are also estimated from at most 187 months, and only 44 in the 2023 to 2026 subperiod. Trailing betas are estimated with error from one year of daily data, which weakens beta as a control.
+\textbf{Risk-model asymmetry.} The multi-factor alphas use factors built from the survivorship-free CRSP universe to explain portfolios drawn from a universe that is not, so an alpha can measure the selection as much as any mispricing, as the volatility result shows. The regressions also omit value, profitability and investment characteristics, and the volatility factor is total rather than idiosyncratic volatility.
 
-\textbf{Post hoc extensions.} The drawdown, multi-factor, point-in-time and non-winsorised analyses were added after the original results were known. Their specifications were fixed and committed before they were computed, which rules out choosing among variants after seeing the output, but the extensions still add to the number of specifications reported, and the questions they answer were chosen with knowledge of where the original results looked weak.
+\textbf{Post hoc extensions.} The drawdown, multi-factor, point-in-time and non-winsorised analyses were added after the original results were known. Their specifications were committed before they were computed, which rules out choosing among variants after seeing the output, but they add to the number of specifications reported, and the questions were chosen with knowledge of where the original results looked weak.
 
-\textbf{Membership data.} The historical constituent lists come from an open-source compilation rather than a licensed index-provider file. Their early years derive from a single third-party source, and later changes were added by hand from public announcements, so individual dates may be wrong by days, as the six-day gap between Praxair's removal and Linde's addition illustrates (this gap is bridged in the analysis). The ticker mapping was audited stock by stock, but an error affecting a few stock-months cannot be ruled out.
+\textbf{Look-ahead in auxiliary data.} Market capitalisation uses the current share count for every month, and GICS sectors are current labels applied historically. Neither affects the return timing, but each uses information not available at the time. The historical membership lists come from an open-source compilation, so individual dates may be wrong by days.
 
-\textbf{Look-ahead in auxiliary data.} Market capitalisation uses the current share count for every month, and GICS sectors are current labels applied historically (for example, the 2018 reclassification that created Communication Services is not reflected). VIX tercile cut-offs use the full sample. None of these affects the return timing, but each uses information not available at the time.
+\textbf{Power.} About 15 years of monthly data and 200 stocks give roughly 20 stocks per decile, so decile portfolios are noisy, and the out-of-sample period has only 70 months.
 
-\textbf{Sample size and power.} The study covers about 15 years of monthly data and 200 stocks, so roughly 20 stocks per decile. Decile portfolios are therefore noisy, the out-of-sample period has only 70 months, and the regime analysis only about 58 months per tercile.
-
-\textbf{Transaction cost model.} Costs are a flat 10 basis points per unit of turnover. The model ignores market impact, bid-ask variation across stocks and over time, and the cost and availability of borrowing stocks for the short leg. It also ignores weight drift within each month, which understates true turnover.
-
-\textbf{Portfolio construction.} Portfolios are equal-weighted and rebalanced monthly, which overweights the smaller names in the universe relative to a capacity-aware, value-weighted implementation. The long-short portfolios are not beta-neutral by construction; market exposure is removed only after the fact by regression, which a live strategy would have to achieve by hedging with estimated, and therefore imperfect, betas.
-
-\textbf{Treatment of extremes.} Winsorising the factor characteristics compresses the tail of the characteristic distribution, which is where, per \citet{daniel2016}, momentum's crash risk is concentrated. Section~\ref{sec:raw} shows that the choice does not flatter momentum: without winsorisation the decile spreads are unchanged and the regression premium is larger. Crash risk itself shows up in returns, which are never winsorised, so it is fully present in the decile results and the drawdowns of Table~\ref{tab:drawdowns}. The remaining caveat is that unwinsorised regressions let a single extreme stock (SanDisk's momentum exceeded 5,000\%) carry a large weight in a month's slope, so neither specification is a complete description of a nonlinear relationship.
-
-\textbf{Scope.} The volatility factor is total volatility; idiosyncratic volatility relative to a factor model, the measure behind the headline result of \citet{ang2006}, was not tested, so the volatility results mix market, sector and stock-specific risk. The cross-sectional regressions omit established characteristics such as value, profitability and investment \citep{fama1993,fama2015}, so the premia estimated here may partly proxy for these. Section~\ref{sec:multifactor} controls for exposure to the corresponding factor returns, but not for the characteristics themselves. Results for large U.S.\ stocks may not generalise to smaller stocks or other markets, particularly for short-term reversal, which is strongest among smaller, less liquid stocks.
+\textbf{Costs and portfolio construction.} Costs are a flat 10 basis points per unit of turnover, with no market impact, borrowing cost for the short leg or within-month weight drift. Portfolios are equal-weighted, which overweights the smaller names relative to a capacity-aware implementation, and they are not beta-neutral by construction: market exposure is removed only after the fact by regression.
 
 \section{Conclusion}
 
-Among the 200 largest current S\&P 500 constituents, 12-1 momentum is the only positive premium that remains significant both once market exposure is removed and under point-in-time index membership (market-adjusted Fama-MacBeth $t = 3.41$; $2.26$ point-in-time, where the unadjusted premium is no longer significant, $t = 1.76$). It is the standard momentum factor (UMD loading $t = 8.83$), not a separate source of return. The strongest raw result, volatility, is market beta under the single-factor model, and its multi-factor alpha has the signature of survivorship bias. Size and reversal are not findings. In more detail, momentum and 60-day total volatility both show positive and statistically significant raw Fama-MacBeth premia over 2012 to 2026 that are robust to sector neutralisation, with break-even trading costs (56.0 and 193.0 basis points per unit turnover) well above the assumed 10 basis points, but risk adjustment separates them. Under the single-factor model the volatility premium is largely compensation for market beta in a strong bull market: the long-short portfolio has a beta of 1.17 and no alpha before 2023, and the regression premium disappears once the market is hedged. Under the five-factor model with momentum it shows a large alpha instead, because its stocks are unprofitable, heavily investing firms that earned high returns, which is the signature of firms selected ex post rather than of a premium an investor could have captured. Momentum is close to market-neutral; its market-adjusted premium of 3.7\% a year per standard deviation is significant before 2023 as well as over the full sample, and its alpha beyond UMD is insignificant before 2023. It is the most robust result in the study and agrees with a large literature, but it is weaker under point-in-time membership, where only the market-adjusted premium stays significant, and its decile portfolio lost 56.3\% between 2016 and 2023. Short-term reversal shows no reliable premium after costs. The strongly negative size premium, and a positive volatility premium in excess of beta that contradicts the literature, are attributed to survivorship bias in a universe selected at the end of the sample; the point-in-time filter removes the significance of the second and shrinks the first by a quarter, which partially confirms the diagnosis.
+Among the 200 largest current S\&P 500 constituents, 12-1 momentum is the only positive premium that remains significant both once market exposure is removed and under point-in-time index membership (market-adjusted Fama-MacBeth $t = 3.41$; $2.26$ point-in-time, where the unadjusted premium is no longer significant, $t = 1.76$). It is the standard momentum factor (UMD loading $t = 8.83$), not a separate source of return, and its decile portfolio lost 56.3\% between 2016 and 2023. The strongest raw result, volatility, is market beta under the single-factor model, and its large multi-factor alpha comes from unprofitable, heavily investing firms that nonetheless won, the signature of firms selected ex post rather than of a premium an investor could have captured. Short-term reversal shows no reliable premium after costs. The strongly negative size premium and the residual volatility premium are attributed to survivorship bias; the point-in-time filter removes the significance of the second and shrinks the first by a quarter, which partially confirms the diagnosis.
 
-Important qualifications remain. Rank information coefficients are insignificant for both momentum and volatility, so their predictive content sits in the tails of the cross-section; momentum's decile alphas are only marginally significant; no premium outside the 2023 to 2026 period clears the stricter $t > 3$ hurdle suggested for multiple testing; and firms that left the index are still missing from the data.
-
-The main value of the study lies in its process: a single, verified timing convention; three complementary evaluation lenses whose disagreements are explained rather than ignored; risk adjustment that distinguishes a factor premium from market exposure and from sample selection; robustness extensions specified before they were computed; and validation that identifies which results are artefacts of the sample. Natural extensions are a fully survivorship-free universe with delisting returns, a longer sample, beta-neutral and value-weighted portfolios, value and profitability characteristics in the cross-sectional regressions, and sub-industry neutralisation.
+Important qualifications remain: rank information coefficients are insignificant for both momentum and volatility, so their predictive content sits in the tails of the cross-section; no premium outside 2023 to 2026 clears the stricter $t > 3$ hurdle; and firms that left the index are still missing from the data. The main value of the study lies in its process: a single, verified timing convention, three evaluation lenses whose disagreements are explained, risk adjustment that separates a premium from market exposure and from sample selection, and robustness extensions specified before they were computed. The natural next step is a survivorship-free universe with delisting returns.
 
 \section*{Reproducibility}
 
 {\raggedright
-All code is in the project repository and runs in this order: \texttt{fetch\_universe.py}, \texttt{fetch\_market\_caps.py}, \texttt{fetch\_prices.py}, \texttt{fetch\_vix.py}, \texttt{fetch\_market.py}, \texttt{fetch\_french.py}, \texttt{fetch\_sp500\_history.py}, \texttt{sanity\_check\_prices.py}, the five \texttt{compute\_*.py} factor and beta scripts, \texttt{check\_factor\_distributions.py}, \texttt{winsorize\_factors.py}, \texttt{decile\_backtest.py}, \texttt{fama\_macbeth.py}, \texttt{validation\_costs.py}, \texttt{extensions.py}, \texttt{risk\_adjustment.py}, \texttt{information\_coefficient.py}, then the robustness extensions \texttt{drawdowns.py}, \texttt{multifactor\_alphas.py}, \texttt{point\_in\_time.py} and \texttt{raw\_factors.py} (specified in advance in \texttt{robustness\_spec.py}), and finally \texttt{make\_figures.py} and \texttt{make\_tables.py}. Every table and figure in this paper is generated directly from the saved outputs, so no reported number is transcribed by hand.\par}
+All code is in the project repository and runs in this order: \texttt{fetch\_universe.py}, \texttt{fetch\_market\_caps.py}, \texttt{fetch\_prices.py}, \texttt{fetch\_market.py}, \texttt{fetch\_french.py}, \texttt{fetch\_sp500\_history.py}, \texttt{sanity\_check\_prices.py}, the five \texttt{compute\_*.py} factor and beta scripts, \texttt{check\_factor\_distributions.py}, \texttt{winsorize\_factors.py}, \texttt{decile\_backtest.py}, \texttt{fama\_macbeth.py}, \texttt{validation\_costs.py}, \texttt{extensions.py} (sector-neutral factors), \texttt{risk\_adjustment.py}, \texttt{information\_coefficient.py}, then the robustness extensions \texttt{drawdowns.py}, \texttt{multifactor\_alphas.py}, \texttt{point\_in\_time.py} and \texttt{raw\_factors.py} (specified in advance in \texttt{robustness\_spec.py}), and finally \texttt{make\_figures.py} and \texttt{make\_tables.py}. Every table and figure in this paper is generated directly from the saved outputs, so no tabulated number is transcribed by hand.\par}
 
 \begin{thebibliography}{99}
 \setlength{\itemsep}{2pt}
@@ -476,9 +417,6 @@ Daniel, K., and Moskowitz, T.~J. (2016). Momentum crashes. \textit{Journal of Fi
 
 \bibitem[Fama and French(1992)]{fama1992}
 Fama, E.~F., and French, K.~R. (1992). The cross-section of expected stock returns. \textit{Journal of Finance}, 47(2), 427--465.
-
-\bibitem[Fama and French(1993)]{fama1993}
-Fama, E.~F., and French, K.~R. (1993). Common risk factors in the returns on stocks and bonds. \textit{Journal of Financial Economics}, 33(1), 3--56.
 
 \bibitem[Fama and French(2015)]{fama2015}
 Fama, E.~F., and French, K.~R. (2015). A five-factor asset pricing model. \textit{Journal of Financial Economics}, 116(1), 1--22.

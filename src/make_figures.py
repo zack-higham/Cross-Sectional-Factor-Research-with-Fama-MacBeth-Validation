@@ -20,7 +20,6 @@ LABELS = {"momentum": "Momentum (12-1)", "reversal": "Reversal (1m)",
 # categorical slots in fixed order (validated palette), one per factor
 COLORS = dict(zip(FACTORS, ["#2a78d6", "#eb6834", "#1baf7a", "#eda100"]))
 INK, MUTED, GRID = "#1f1f1e", "#6b6a64", "#e4e3de"
-REGIME_COLORS = ["#9ec5f4", "#3987e5", "#184f95"]  # one-hue ordinal ramp: low, mid, high VIX
 SPLIT_DATE = pd.Timestamp("2020-10-31")  # last in-sample month (Stage 5)
 
 plt.rcParams.update({
@@ -96,42 +95,6 @@ def rolling_panels(series, filename, ylabel, scale=1.0, window=12):
     fig.savefig(f"{FIG_DIR}/{filename}")
 
 
-def sector_neutral_bars():
-    cmp = pd.read_csv(f"{OUT_DIR}/sector_neutral_comparison.csv", index_col=0)
-    x = np.arange(len(FACTORS))
-    fig, ax = plt.subplots(figsize=(6.3, 2.8))
-    bars = [("raw_sharpe", "Raw (full universe ranking)", "#2a78d6", -0.2),
-            ("sn_sharpe", "Sector-neutral (within-sector ranking)", "#eb6834", 0.2)]
-    for col, label, color, offset in bars:
-        vals = cmp.loc[FACTORS, col]
-        ax.bar(x + offset, vals, width=0.38, color=color, label=label, edgecolor="white", linewidth=1)
-        for xi, v in zip(x + offset, vals):
-            ax.annotate(f"{v:.2f}", (xi, v), xytext=(0, 3 if v >= 0 else -9),
-                        textcoords="offset points", ha="center", fontsize=7.5, color=INK)
-    ax.axhline(0, color=MUTED, lw=0.8)
-    ax.set_xticks(x, [LABELS[f] for f in FACTORS])
-    ax.grid(axis="x", visible=False)
-    ax.set_ylim(-1.7, 1.05)  # headroom so value labels clear the axes
-    ax.set_ylabel("Annualised Sharpe (gross)")
-    ax.legend(loc="lower left", fontsize=7.5)
-    fig.savefig(f"{FIG_DIR}/sector_neutral_comparison.pdf")
-
-
-def regime_bars():
-    reg = pd.read_csv(f"{OUT_DIR}/regime_long_short.csv", index_col=0)
-    x = np.arange(len(FACTORS))
-    fig, ax = plt.subplots(figsize=(6.3, 2.8))
-    for i, (g, color) in enumerate(zip(["low", "mid", "high"], REGIME_COLORS)):
-        ax.bar(x + (i - 1) * 0.26, reg.loc[FACTORS, f"{g}_mean_%"], width=0.24, color=color,
-               label=f"{g.capitalize()} VIX tercile", edgecolor="white", linewidth=1)
-    ax.axhline(0, color=MUTED, lw=0.8)
-    ax.set_xticks(x, [LABELS[f] for f in FACTORS])
-    ax.grid(axis="x", visible=False)
-    ax.set_ylabel("Mean monthly L/S return (%)")
-    ax.legend(loc="lower left", fontsize=7.5)
-    fig.savefig(f"{FIG_DIR}/vix_regimes.pdf")
-
-
 def robustness_summary():
     """Fama-MacBeth t-statistic of each factor across specifications (summary
     figure for SUMMARY.pdf and the README). Every value is read from a saved output."""
@@ -171,6 +134,4 @@ if __name__ == "__main__":
     decile_bars()
     rolling_panels(load("fm_slopes_multivariate.csv"), "fm_coefficients.pdf", "FM slope (%)", scale=100)
     rolling_panels(load("ic_monthly.csv"), "ic_timeseries.pdf", "Rank IC")
-    sector_neutral_bars()
-    regime_bars()
     print("figures written to", FIG_DIR)

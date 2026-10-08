@@ -94,24 +94,6 @@ def fama_macbeth():
           rows, "lrrrrrr")
 
 
-def is_oos():
-    d = pd.read_csv(f"{OUT_DIR}/is_oos_comparison.csv", index_col=[0, 1])
-    rows = []
-    for f in FACTORS:
-        i, o = d.loc[("in_sample", f)], d.loc[("out_of_sample", f)]
-        rows.append(" & ".join([NAMES[f], num(i["ls_ann_ret_%"]), num(i["ls_sharpe"]), num(i["fm_mean_%"], 3),
-                                tstat(i["fm_nw_t"]), num(o["ls_ann_ret_%"]), num(o["ls_sharpe"]),
-                                num(o["fm_mean_%"], 3), tstat(o["fm_nw_t"])]))
-    dates = pd.read_csv(f"{OUT_DIR}/fm_slopes_multivariate.csv", index_col=0, parse_dates=True).index
-    split = dates[int(len(dates) * 0.6) - 1]  # same rule as validation_costs.py
-    span = lambda idx: f"{idx.min():%Y-%m} to {idx.max():%Y-%m}, {len(idx)} months"
-    write("is_oos", f"& \\multicolumn{{4}}{{c}}{{In-sample ({span(dates[dates <= split])})}} & "
-          f"\\multicolumn{{4}}{{c}}{{Out-of-sample ({span(dates[dates > split])})}} \\\\\n"
-          "\\cmidrule(lr){2-5} \\cmidrule(lr){6-9}\n"
-          "Factor & L/S ret.\\ (\\%) & Sharpe & FM $\\bar\\gamma$ (\\%) & NW $t$ "
-          "& L/S ret.\\ (\\%) & Sharpe & FM $\\bar\\gamma$ (\\%) & NW $t$", rows, "lrrrrrrrr")
-
-
 def costs():
     c = load("costs_summary.csv")
     s = load("cost_sensitivity_sharpe.csv")
@@ -123,33 +105,6 @@ def costs():
           "\\cmidrule(lr){7-10}\n"
           "Factor & Turnover & Cost (\\%/yr) & Gross ret.\\ (\\%) & Net ret.\\ (\\%) & Break-even (bps) "
           "& 0 & 5 & 10 & 20", rows, "lrrrrrrrrr")
-
-
-def sector_neutral():
-    c = load("sector_neutral_comparison.csv")
-    fm = pd.read_csv(f"{OUT_DIR}/fm_sector_neutral_comparison.csv", index_col=0, header=[0, 1])
-    rows = [" & ".join([NAMES[f], num(c.loc[f, "raw_ann_ret_%"]), num(c.loc[f, "sn_ann_ret_%"]),
-                        num(c.loc[f, "raw_sharpe"]), num(c.loc[f, "sn_sharpe"]), num(c.loc[f, "sn_net_sharpe"]),
-                        num(c.loc[f, "corr_raw_sn"]),
-                        num(fm.loc[f, ("raw", "mean_%")], 3) + " " + tstat(fm.loc[f, ("raw", "nw_t")]),
-                        num(fm.loc[f, ("sector_neutral", "mean_%")], 3) + " " + tstat(fm.loc[f, ("sector_neutral", "nw_t")])])
-            for f in FACTORS]
-    write("sector_neutral", "& \\multicolumn{2}{c}{Ann.\\ return (\\%)} & \\multicolumn{3}{c}{Sharpe} & & "
-          "\\multicolumn{2}{c}{FM $\\bar\\gamma$ (\\%), NW $t$} \\\\\n"
-          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-6} \\cmidrule(lr){8-9}\n"
-          "Factor & Raw & SN & Raw & SN & SN net & Corr. & Raw & Sector dummies", rows, "lrrrrrrrr")
-
-
-def regimes():
-    ls = load("regime_long_short.csv")
-    fm = load("regime_fm_slopes.csv")
-    rows = [" & ".join([NAMES[f], num(ls.loc[f, "low_mean_%"]), num(ls.loc[f, "mid_mean_%"]),
-                        num(ls.loc[f, "high_mean_%"]), num(ls.loc[f, "welch_t"]), num(ls.loc[f, "welch_p"]),
-                        num(fm.loc[f, "low_mean_%"], 3), num(fm.loc[f, "high_mean_%"], 3), num(fm.loc[f, "welch_p"])])
-            for f in FACTORS]
-    write("regimes", "& \\multicolumn{5}{c}{Long-short return (\\%/mo)} & \\multicolumn{3}{c}{FM $\\bar\\gamma$ (\\%)} \\\\\n"
-          "\\cmidrule(lr){2-6} \\cmidrule(lr){7-9}\n"
-          "Factor & Low & Mid & High & Welch $t$ & $p$ & Low & High & $p$", rows, "lrrrrrrrr")
 
 
 def information_coefficient():
@@ -179,21 +134,20 @@ def subperiods():
 
 def momentum_crashes(n=5):
     ls = pd.read_csv(f"{OUT_DIR}/long_short_returns.csv", index_col=0, parse_dates=True)
-    vix = pd.read_csv(f"{DATA_DIR}/vix.csv", index_col=0, parse_dates=True)["vix"].resample("ME").last()
     worst = ls["momentum"].nsmallest(n)
-    rows = [" & ".join([f"{d:%Y-%m}", num(r * 100, 1), num(vix.shift(1).loc[d], 1)]) for d, r in worst.items()]
-    write("momentum_crashes", "Month & Momentum L/S return (\\%) & VIX at prior month-end", rows, "lrr")
+    rows = [" & ".join([f"{d:%Y-%m}", num(r * 100, 1)]) for d, r in worst.items()]
+    write("momentum_crashes", "Month & Momentum L/S return (\\%)", rows, "lr")
 
 
 def capm_alphas():
     a = pd.read_csv(f"{OUT_DIR}/capm_alphas.csv", index_col=[0, 1])
     cell = lambda spec, f: num(a.loc[(spec, f), "alpha_ann_%"]) + " " + tstat(a.loc[(spec, f), "alpha_nw_t"])
     rows = [" & ".join([NAMES[f], num(a.loc[("gross", f), "beta"]), tstat(a.loc[("gross", f), "beta_nw_t"]),
-                        cell("gross", f), cell("net", f), cell("sector_neutral", f),
-                        cell("pre_2023", f), cell("from_2023", f)]) for f in FACTORS]
-    write("capm_alphas", "& \\multicolumn{2}{c}{Market beta} & \\multicolumn{5}{c}{CAPM alpha (\\%/yr), NW $t$} \\\\\n"
-          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-8}\n"
-          "Factor & $\\beta$ & NW $t$ & Gross & Net & Sector-neutral & 2012 to 2022 & 2023 to 2026", rows, "lrrrrrrr")
+                        cell("gross", f), cell("net", f), cell("pre_2023", f), cell("from_2023", f)])
+            for f in FACTORS]
+    write("capm_alphas", "& \\multicolumn{2}{c}{Market beta} & \\multicolumn{4}{c}{CAPM alpha (\\%/yr), NW $t$} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-7}\n"
+          "Factor & $\\beta$ & NW $t$ & Gross & Net & 2012 to 2022 & 2023 to 2026", rows, "lrrrrrr")
 
 
 def fm_risk():
@@ -220,20 +174,18 @@ def ym(x):
 def drawdowns():
     d = pd.read_csv(f"{OUT_DIR}/drawdowns.csv", index_col=[0, 1, 2])
     rows = []
-    for construction, label in [("raw", "Raw"), ("sector_neutral", "Sector-neutral")]:
-        rows.append(f"\\multicolumn{{9}}{{l}}{{\\textit{{{label}}}}}")
-        for f in FACTORS:
-            g, n = d.loc[(construction, "gross", f)], d.loc[(construction, "net", f)]
-            rows.append(" & ".join([NAMES[f], num(float(g["ann_ret_%"])), num(float(g["mdd_%"]), 1),
-                                    ym(g["peak"]), ym(g["trough"]), ym(g["recovery"]),
-                                    num(float(g["calmar"])), num(float(n["mdd_%"]), 1), num(float(n["calmar"]))]))
+    for f in FACTORS:
+        g, n = d.loc[("raw", "gross", f)], d.loc[("raw", "net", f)]
+        rows.append(" & ".join([NAMES[f], num(float(g["ann_ret_%"])), num(float(g["mdd_%"]), 1),
+                                ym(g["peak"]), ym(g["trough"]), ym(g["recovery"]),
+                                num(float(g["calmar"])), num(float(n["mdd_%"]), 1), num(float(n["calmar"]))]))
     write("drawdowns", "& \\multicolumn{6}{c}{Gross} & \\multicolumn{2}{c}{Net of 10 bps} \\\\\n"
           "\\cmidrule(lr){2-7} \\cmidrule(lr){8-9}\n"
           "Factor & Ann.\\ ret.\\ (\\%) & Max DD (\\%) & Peak & Trough & Recovery & Calmar & Max DD (\\%) & Calmar",
           rows, "lrrcccrrr")
 
 
-MF_MODELS = ["CAPM", "FF3", "Carhart", "FF5+UMD"]
+MF_MODELS = ["CAPM", "FF5+UMD"]
 MF_FACTORS = ["Mkt-RF", "SMB", "HML", "RMW", "CMA", "UMD"]
 
 
@@ -242,17 +194,23 @@ def multifactor_alphas():
     cell = lambda s, mod, per: num(m.loc[(s, mod, per), "alpha_ann_%"]) + " " + tstat(m.loc[(s, mod, per), "alpha_nw_t"])
     rows = []
     panels = [("gross", "Panel A: long-short portfolios, gross (\\%/yr)"),
-              ("net", "Panel B: long-short portfolios, net of 10 bps (\\%/yr)"),
-              ("fm", "Panel C: multivariate Fama-MacBeth slopes (\\%/yr per 1 SD)")]
+              ("fm", "Panel B: multivariate Fama-MacBeth slopes (\\%/yr per 1 SD)")]
     for suffix, title in panels:
-        rows.append(f"\\multicolumn{{7}}{{l}}{{\\textit{{{title}}}}}")
+        rows.append(f"\\multicolumn{{5}}{{l}}{{\\textit{{{title}}}}}")
         for f in FACTORS:
             s = f"{f}_{suffix}"
             rows.append(" & ".join([NAMES[f]] + [cell(s, mod, "full") for mod in MF_MODELS]
                                    + [cell(s, "FF5+UMD", "pre_2023"), cell(s, "FF5+UMD", "from_2023")]))
-    write("multifactor_alphas", "& \\multicolumn{4}{c}{Full sample} & \\multicolumn{2}{c}{FF5+UMD by period} \\\\\n"
-          "\\cmidrule(lr){2-5} \\cmidrule(lr){6-7}\n"
-          "Series & CAPM & FF3 & Carhart & FF5+UMD & 2012 to 2022 & 2023 to 2026", rows, "lrrrrrr")
+    write("multifactor_alphas", "& \\multicolumn{2}{c}{Full sample} & \\multicolumn{2}{c}{FF5+UMD by period} \\\\\n"
+          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5}\n"
+          "Series & CAPM & FF5+UMD & 2012 to 2022 & 2023 to 2026", rows, "lrrrr")
+    # Quoted in Section 5.3 rather than tabulated: the cost drag on alphas and the Carhart momentum alpha.
+    for f in ("momentum", "volatility"):
+        drag = [m.loc[(f"{f}_gross", mod, per), "alpha_ann_%"] - m.loc[(f"{f}_net", mod, per), "alpha_ann_%"]
+                for mod in ("CAPM", "FF3", "Carhart", "FF5+UMD") for per in ("full",)]
+        print(f"{f}: net alphas lower than gross by {min(drag):.2f} to {max(drag):.2f} points a year")
+    c = m.loc[("momentum_gross", "Carhart", "full")]
+    print(f"momentum Carhart alpha {c['alpha_ann_%']:.2f}%/yr (t = {c['alpha_nw_t']:.2f})")
 
 
 def multifactor_loadings():
@@ -298,26 +256,30 @@ def point_in_time():
     write("pit_counts", "Year & " + " & ".join(str(y) for y in years), rows, "l" + "r" * len(years))
 
 
-def raw_factors():
-    c = pd.read_csv(f"{OUT_DIR}/raw_factor_comparison.csv", index_col=[0, 1])
-    rows = []
-    for f in FACTORS:
-        w, r = c.loc[("winsorised", f)], c.loc[("raw", f)]
-        rows.append(" & ".join([NAMES[f], num(w["ls_ann_ret_%"]), num(r["ls_ann_ret_%"]),
-                                num(w["fm_mean_%"], 3) + " " + tstat(w["fm_nw_t"]),
-                                num(r["fm_mean_%"], 3) + " " + tstat(r["fm_nw_t"]),
-                                num(w["fm_mktadj_alpha_%"]) + " " + tstat(w["fm_mktadj_t"]),
-                                num(r["fm_mktadj_alpha_%"]) + " " + tstat(r["fm_mktadj_t"])]))
-    write("raw_factors", "& \\multicolumn{2}{c}{L/S ann.\\ return (\\%)} & \\multicolumn{2}{c}{FM $\\bar\\gamma$ (\\%/mo), NW $t$} "
-          "& \\multicolumn{2}{c}{Market-adjusted (\\%/yr), NW $t$} \\\\\n"
-          "\\cmidrule(lr){2-3} \\cmidrule(lr){4-5} \\cmidrule(lr){6-7}\n"
-          "Factor & Winsorised & Raw & Winsorised & Raw & Winsorised & Raw", rows, "lrrrrrr")
+def prose_values():
+    """Print the numbers that Sections 5.1, 5.6 and 5.8 quote in place of a table."""
+    d = pd.read_csv(f"{OUT_DIR}/is_oos_comparison.csv", index_col=[0, 1])
+    print(f"60/40 split: momentum FM t {d.loc[('in_sample', 'momentum'), 'fm_nw_t']:.2f} in-sample, "
+          f"{d.loc[('out_of_sample', 'momentum'), 'fm_nw_t']:.2f} out-of-sample; volatility L/S "
+          f"{d.loc[('in_sample', 'volatility'), 'ls_ann_ret_%']:.2f}% to "
+          f"{d.loc[('out_of_sample', 'volatility'), 'ls_ann_ret_%']:.2f}% a year")
+    s = load("sector_neutral_comparison.csv")
+    fm = pd.read_csv(f"{OUT_DIR}/fm_sector_neutral_comparison.csv", index_col=0, header=[0, 1])
+    print(f"sector-neutral: volatility L/S {s.loc['volatility', 'raw_ann_ret_%']:.2f}% to "
+          f"{s.loc['volatility', 'sn_ann_ret_%']:.2f}% a year; FM with sector dummies: momentum "
+          f"{fm.loc['momentum', ('sector_neutral', 'mean_%')]:.3f} (t {fm.loc['momentum', ('sector_neutral', 'nw_t')]:.2f}), "
+          f"volatility {fm.loc['volatility', ('sector_neutral', 'mean_%')]:.3f} "
+          f"(t {fm.loc['volatility', ('sector_neutral', 'nw_t')]:.2f})")
+    r = pd.read_csv(f"{OUT_DIR}/raw_factor_comparison.csv", index_col=[0, 1])
+    same = (r.xs("raw")["ls_ann_ret_%"] - r.xs("winsorised")["ls_ann_ret_%"]).abs().max()
+    m = r.loc[("raw", "momentum")]
+    print(f"unwinsorised: max change in decile spread {same:.2e}; momentum FM {m['fm_mean_%']:.3f}% "
+          f"(t {m['fm_nw_t']:.2f}), market-adjusted {m['fm_mktadj_alpha_%']:.2f}% (t {m['fm_mktadj_t']:.2f})")
 
 
 if __name__ == "__main__":
-    for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, is_oos, costs,
-               sector_neutral, regimes, information_coefficient, subperiods, momentum_crashes,
-               capm_alphas, fm_risk, drawdowns, multifactor_alphas, multifactor_loadings, point_in_time,
-               raw_factors]:
+    for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, costs,
+               information_coefficient, subperiods, momentum_crashes, capm_alphas, fm_risk, drawdowns,
+               multifactor_alphas, multifactor_loadings, point_in_time, prose_values]:
         fn()
     print("tables written to", TAB_DIR)

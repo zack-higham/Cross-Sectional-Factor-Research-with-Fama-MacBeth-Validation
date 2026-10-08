@@ -7,7 +7,7 @@ loading t = 8.83), not a separate source of return. The strongest raw result, vo
 CAPM, and its multi-factor alpha has the signature of survivorship bias. Size and reversal are not findings.**
 
 - **One-page summary:** [SUMMARY.pdf](SUMMARY.pdf)
-- **Full paper (23 pages):** [paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf](paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf) (LaTeX source: [`paper/main.tex`](paper/main.tex))
+- **Full paper (18 pages):** [paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf](paper/Cross_Sectional_Factor_Study_with_Fama_Macbeth_Validation.pdf) (LaTeX source: [`paper/main.tex`](paper/main.tex))
 
 ![Fama-MacBeth t-statistic of each factor across specifications](paper/figures/robustness_summary.png)
 
@@ -39,12 +39,16 @@ not premia)
 - **Timing:** the factor paired with month *t*'s return uses prices only to the end of *t-1* (verified by hand).
 - **Three lenses:** equal-weighted decile long-short portfolios; Fama-MacBeth regressions on z-scored factors with
   Newey-West t-statistics; monthly rank information coefficients.
+- **Sample:** daily prices January 2011 to September 2026; the return sample with all four factors runs from
+  February 2012 to August 2026 (175 months).
 - **Validation:** 60/40 and pre/post-2023 splits; CAPM alphas vs SPY, beta as an FM control and market-adjusted FM
-  slopes; 10 bps costs with break-evens; sector-neutral construction; VIX regimes.
-- **Robustness extensions (pre-registered):** drawdowns and Calmar ratios; Fama-French 3, Carhart and FF5+UMD alphas;
+  slopes; 10 bps costs with break-evens.
+- **Robustness extensions (pre-registered):** drawdowns and Calmar ratios; FF5+UMD alphas;
   a point-in-time S&P 500 membership filter with an audited ticker-rename map; unwinsorised factors. Their
   specifications and interpretation rules were committed in [`src/robustness_spec.py`](src/robustness_spec.py)
   before any of them was run, and no original number changed.
+- **Also checked:** sector-neutral construction (ranking within GICS sectors leaves the Fama-MacBeth premia close to
+  their originals, so the factors are not simply sector bets).
 
 ## Issues found and fixed along the way
 
@@ -74,7 +78,6 @@ pip install -r requirements.txt
 python src/fetch_universe.py
 python src/fetch_market_caps.py
 python src/fetch_prices.py
-python src/fetch_vix.py
 python src/fetch_market.py
 python src/fetch_french.py
 python src/fetch_sp500_history.py

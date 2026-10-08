@@ -19,16 +19,16 @@
 \vspace{2pt}
 {\large A cross-sectional factor study with Fama-MacBeth validation, 2011 to 2026: one-page summary}\par
 \vspace{2pt}
-Zack Higham, BSc Mathematics, Queen Mary University of London. Full paper (23 pages) and code:\par{\small\href{https://github.com/zack-higham/Cross-Sectional-Factor-Research-with-Fama-MacBeth-Validation}{github.com/zack-higham/Cross-Sectional-Factor-Research-with-Fama-MacBeth-Validation}}
+Zack Higham, BSc Mathematics, Queen Mary University of London. Full paper (18 pages) and code:\par{\small\href{https://github.com/zack-higham/Cross-Sectional-Factor-Research-with-Fama-MacBeth-Validation}{github.com/zack-higham/Cross-Sectional-Factor-Research-with-Fama-MacBeth-Validation}}
 
 \head{Question}
 Do four standard characteristics (12-1 momentum, one-month reversal, 60-day total volatility, log market capitalisation) predict next-month returns among the 200 largest S\&P 500 stocks, and which apparent premia survive risk adjustment, costs and checks for sample-construction bias?
 
 \head{Data and method}
 \begin{itemize}
-\item \textbf{Data:} daily adjusted prices from January 2011; 175 months with all four factors, to August 2026; SPY and T-bills; Fama-French five factors and UMD; historical S\&P 500 membership.
+\item \textbf{Data:} daily prices January 2011 to September 2026; 175 monthly returns with all four factors, February 2012 to August 2026; SPY and T-bills; Fama-French five factors and UMD; historical S\&P 500 membership.
 \item \textbf{Three lenses:} equal-weighted decile long-short portfolios, Fama-MacBeth regressions with Newey-West $t$-statistics, and rank information coefficients, all on one timing convention (factor at end of $t-1$, return over $t$).
-\item \textbf{Validation:} out-of-sample split, CAPM and FF5+UMD alphas, 10 bps costs, drawdowns, sector neutrality, VIX regimes, point-in-time membership and unwinsorised factors (the last four committed before being run).
+\item \textbf{Validation:} out-of-sample split, CAPM alphas and 10 bps costs; then, each committed before being run, FF5+UMD alphas, drawdowns, point-in-time membership and unwinsorised factors.
 \end{itemize}
 
 \head{Findings}
