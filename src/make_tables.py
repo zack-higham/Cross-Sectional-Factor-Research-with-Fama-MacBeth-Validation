@@ -60,15 +60,23 @@ def factor_summary():
 
 
 def decile_spreads():
+    """Long-short spreads, gross, with the 10 bps net results and break-even cost alongside."""
     ls = load("long_short_returns.csv")
     to = load("turnover.csv")
+    c = load("costs_summary.csv")
     st = spread_stats(ls)
     rows = [" & ".join([NAMES[f], str(int(st.loc[f, "months"])), num(ls[f].mean() * 100),
                         num(st.loc[f, "ann_ret_%"]), num(st.loc[f, "ann_vol_%"]),
-                        num(st.loc[f, "sharpe"]), num(st.loc[f, "nw_t"]), num(to[f].mean())])
+                        num(st.loc[f, "sharpe"]), num(st.loc[f, "nw_t"]), num(to[f].mean()),
+                        num(c.loc[f, "net_ann_ret_%"]), num(c.loc[f, "net_sharpe"]),
+                        num(c.loc[f, "breakeven_bps"], 1)])
             for f in FACTORS]
-    write("decile_spreads", "Factor & Months & Mean (\\%/mo) & Ann.\\ return (\\%) & Ann.\\ vol (\\%) "
-          "& Sharpe & NW $t$ & Turnover", rows, "lrrrrrrr")
+    s = load("cost_sensitivity_sharpe.csv")
+    print(f"momentum Sharpe {s.loc['momentum', '0bps']:.2f} gross, {s.loc['momentum', '20bps']:.2f} at 20 bps")
+    write("decile_spreads", "& & \\multicolumn{6}{c}{Gross} & \\multicolumn{3}{c}{Net of 10 bps} \\\\\n"
+          "\\cmidrule(lr){3-8} \\cmidrule(lr){9-11}\n"
+          "Factor & Months & Mean (\\%/mo) & Ann.\\ return (\\%) & Ann.\\ vol (\\%) "
+          "& Sharpe & NW $t$ & Turnover & Ann.\\ return (\\%) & Sharpe & Break-even (bps)", rows, "lrrrrrrrrrr")
 
 
 def decile_means():
@@ -92,19 +100,6 @@ def fama_macbeth():
           "\\cmidrule(lr){2-3} \\cmidrule(lr){4-7}\n"
           "Factor & $\\bar\\gamma$ (\\%) & NW $t$ & $\\bar\\gamma$ (\\%) & NW $t$ & Plain FM $t$ & \\% months $>0$",
           rows, "lrrrrrr")
-
-
-def costs():
-    c = load("costs_summary.csv")
-    s = load("cost_sensitivity_sharpe.csv")
-    rows = [" & ".join([NAMES[f], num(c.loc[f, "mean_turnover"]), num(c.loc[f, "ann_cost_%"]),
-                        num(c.loc[f, "gross_ann_ret_%"]), num(c.loc[f, "net_ann_ret_%"]),
-                        num(c.loc[f, "breakeven_bps"], 1)] + [num(s.loc[f, col]) for col in s.columns])
-            for f in FACTORS]
-    write("costs", "& & & & & & \\multicolumn{4}{c}{Net Sharpe at cost (bps per unit turnover)} \\\\\n"
-          "\\cmidrule(lr){7-10}\n"
-          "Factor & Turnover & Cost (\\%/yr) & Gross ret.\\ (\\%) & Net ret.\\ (\\%) & Break-even (bps) "
-          "& 0 & 5 & 10 & 20", rows, "lrrrrrrrrr")
 
 
 def information_coefficient():
@@ -278,7 +273,7 @@ def prose_values():
 
 
 if __name__ == "__main__":
-    for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth, costs,
+    for fn in [factor_summary, decile_spreads, decile_means, fama_macbeth,
                information_coefficient, subperiods, momentum_crashes, capm_alphas, fm_risk, drawdowns,
                multifactor_alphas, multifactor_loadings, point_in_time, prose_values]:
         fn()
